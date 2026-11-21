@@ -224,6 +224,14 @@ await test("path validation accepts subfolders inside the vault", () => {
   assert.equal(targetPath("Code", "  ", "bash").error, "empty");
 });
 
+await test("leading comments before the doctype stay fast", () => {
+  const start = Date.now();
+  const doc = previewDoc("<!--a-->".repeat(60) + "<p>x</p>", URL_, false, false);
+  assert.ok(Date.now() - start < 200);
+  assert.ok(doc.startsWith("<meta charset"));
+  assert.ok(previewDoc("<!-- a -->\n<!-- b -->\n<!DOCTYPE html><p>x</p>", URL_, false, false).startsWith("<!-- a -->\n<!-- b -->\n<!DOCTYPE html><meta charset"));
+});
+
 await test("dedent keeps trailing spaces inside lines", () => {
   assert.equal(dedent("    a  \n      b\t\n    c"), "a  \n  b\t\nc");
   assert.equal(dedent("x  \ny"), "x  \ny");

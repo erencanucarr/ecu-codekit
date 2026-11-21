@@ -1540,7 +1540,7 @@ function previewDoc(html, url, scripts, network) {
   const dir = url ? url.replace(/[?#].*$/, "").replace(/[^/]*$/, "") : "";
   let prefix = `<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${escAttr(previewCsp(dir, scripts, network))}">`;
   if (dir && /\s(?:src|href)=["']?(?![a-z][\w+.-]*:|\/\/|#|\/)[^"'\s>]/i.test(html)) prefix += `<base href="${escAttr(dir)}">`;
-  const m = /^\s*(?:<!--[\s\S]*?-->\s*)*<!doctype[^>]*>/i.exec(html);
+  const m = /^\s*(?:<!--(?:[^-]|-(?!->))*-->\s*)*<!doctype[^>]*>/i.exec(html);
   return m ? m[0] + prefix + html.slice(m[0].length) : prefix + html;
 }
 
