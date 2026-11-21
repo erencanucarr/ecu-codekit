@@ -176,8 +176,10 @@ pre:hover > .sc-head .sc-head-btn {
 .sc-file-view {
   display: flex;
   flex-direction: column;
-  padding: 0 !important;
-  overflow: hidden !important;
+}
+.workspace-leaf-content[data-type="ecu-codekit-file"] > .view-content.sc-file-view {
+  padding: 0;
+  overflow: hidden;
 }
 .sc-file-bar {
   display: flex;
@@ -262,10 +264,10 @@ pre:hover > .sc-head .sc-head-btn {
 .sc-cm .cm-cursor {
   border-left: 2px solid var(--caret-color, var(--text-normal));
 }
-.sc-cm .cm-selectionBackground,
-.sc-cm.cm-focused .cm-selectionBackground,
-.sc-cm .cm-content ::selection {
-  background: var(--text-selection) !important;
+.view-content.sc-file-view > .sc-file-host .sc-cm.sc-cm > .cm-scroller > .cm-selectionLayer .cm-selectionBackground,
+.view-content.sc-file-view > .sc-file-host .sc-cm.sc-cm.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground,
+.view-content.sc-file-view > .sc-file-host .sc-cm.sc-cm .cm-content ::selection {
+  background: var(--text-selection);
 }
 .sc-cm .cm-selectionMatch {
   background: var(--background-modifier-active-hover);

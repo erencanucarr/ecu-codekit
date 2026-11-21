@@ -57,7 +57,7 @@ const STRINGS = {
     "danger.disk": "formats / overwrites a disk",
     "danger.k8s": "deletes a Kubernetes resource / drains a node",
     "danger.helm": "uninstalls / rolls back a Helm release",
-    "danger.dctl": "changes the Diamanti cluster",
+    "danger.dctl": "changes the cluster (dctl)",
     "danger.container": "deletes containers / images",
     "danger.service": "stops / restarts a service",
     "danger.kill": "kills processes",
@@ -227,7 +227,7 @@ const STRINGS = {
     "danger.disk": "diski biçimlendiriyor / üzerine yazıyor",
     "danger.k8s": "Kubernetes kaynağını siliyor / node'u boşaltıyor",
     "danger.helm": "Helm sürümünü kaldırıyor / geri alıyor",
-    "danger.dctl": "Diamanti cluster'ında değişiklik yapıyor",
+    "danger.dctl": "cluster'da değişiklik yapıyor (dctl)",
     "danger.container": "container / imaj siliyor",
     "danger.service": "servisi durduruyor / yeniden başlatıyor",
     "danger.kill": "süreç öldürüyor",
@@ -368,7 +368,8 @@ function resolveUiLang(pref) {
   if (pref === "en" || pref === "tr") return pref;
   let code = "";
   try {
-    code = (window.localStorage && window.localStorage.getItem("language")) || "";
+    const obs = require("obsidian");
+    code = typeof obs.getLanguage === "function" ? obs.getLanguage() : obs.moment.locale();
   } catch (e) {
     code = "";
   }
@@ -1477,6 +1478,7 @@ class CodeFileView extends TextFileView {
     this.wrapComp = this.wrapComp || new S.Compartment();
     const unit = this.indentUnit();
     return [
+      V.EditorView.editorAttributes.of({ class: "sc-cm" }),
       V.lineNumbers(),
       V.highlightActiveLineGutter(),
       V.highlightSpecialChars(),
@@ -1518,7 +1520,6 @@ class CodeFileView extends TextFileView {
     else {
       this.hostEl.empty();
       this.editor = new V.EditorView({ state, parent: this.hostEl });
-      this.editor.dom.addClass("sc-cm");
     }
     this.renderBar();
     this.updateButtons();
