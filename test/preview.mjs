@@ -75,8 +75,8 @@ async function test(name, fn) {
   }
 }
 
-const URL_ = "app://abc123/Users/me/My%20Vault/Web/page.html?1700000000";
-const DIR = "app://abc123/Users/me/My%20Vault/Web/";
+const URL_ = "app://abc123/home/me/My%20Vault/Web/page.html?1700000000";
+const DIR = "app://abc123/home/me/My%20Vault/Web/";
 const cspOf = (doc) => {
   const m = /<meta http-equiv="Content-Security-Policy" content="([^"]*)">/.exec(doc);
   assert.ok(m, "srcdoc has a CSP meta");
