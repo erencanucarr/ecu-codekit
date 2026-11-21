@@ -1972,6 +1972,7 @@ module.exports = class EcuCodekit extends Plugin {
     if (!data || typeof data.codeFolder !== "string") this.settings.codeFolder = defaultCodeFolder(uiLang);
     this.plainPasteAt = 0;
     this.registeredExts = new Set();
+    this.watchedWindows = new WeakSet();
     this.lastMarkdownLeaf = null;
 
     this.registerView(VIEW_CODE, (leaf) => new CodeFileView(leaf, this));
@@ -2012,7 +2013,6 @@ module.exports = class EcuCodekit extends Plugin {
       })
     );
 
-    this.watchedWindows = new WeakSet();
     this.watchWindow(window);
     this.registerEvent(this.app.workspace.on("window-open", (win, w) => this.watchWindow(w)));
 

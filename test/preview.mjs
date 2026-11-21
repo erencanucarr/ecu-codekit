@@ -175,6 +175,16 @@ await test("new defaults: scripts and network off in preview", async () => {
   assert.equal((await loadWith({ previewScripts: true }, "en")).settings.previewScripts, true);
 });
 
+await test("enabling after the layout is ready watches open leaves", async () => {
+  const leaf = { view: { containerEl: { win: globalThis } }, getViewState: () => ({ type: "markdown" }) };
+  const ws = Object.assign({}, app.workspace, { onLayoutReady: (cb) => cb(), iterateAllLeaves: (cb) => cb(leaf) });
+  lang = "en";
+  const p = new Codekit(Object.assign({}, app, { workspace: ws }));
+  p.registerCodeExts = () => {};
+  await p.onload();
+  assert.equal(p.domEvents.filter(([w, ty]) => w === globalThis && ty === "keydown").length, 1);
+});
+
 await test("plain-paste key listener is registered for popout windows", async () => {
   const handlers = {};
   const a = Object.assign({}, app, { workspace: Object.assign({}, app.workspace, { on: (ev, cb) => ((handlers[ev] = cb), {}) }) });
