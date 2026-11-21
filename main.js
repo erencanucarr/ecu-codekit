@@ -17,6 +17,368 @@ const {
   Scope,
 } = require("obsidian");
 
+const STRINGS = {
+  en: {
+    "lang.text": "Plain text",
+    "lang.none": "No language",
+    "langModal.placeholder": "Pick or type a language (go, bash, yaml…)",
+    "langModal.select": "select",
+    "langModal.apply": "apply",
+    "langModal.cancel": "cancel",
+    "langModal.useTag": "Use the \"{tag}\" tag",
+    "langModal.removeTag": "Remove language tag",
+    "langModal.detected": "detected",
+    "langModal.current": "current",
+    "codeFileSuggest.placeholder": "Code file to insert into the note…",
+    "save.title": "Save code as file",
+    "common.fileName": "File name",
+    "common.language": "Language",
+    "common.folder": "Folder",
+    "save.folderDesc": "Leave empty to save to the vault root.",
+    "save.inNote": "In the note",
+    "link.below": "Keep the code block, add a link below",
+    "link.replace": "Replace the code block with a link",
+    "link.none": "Leave the note as is",
+    "common.save": "Save",
+    "save.emptyName": "File name can't be empty.",
+    "save.exists": "\"{path}\" already exists, pick another name.",
+    "save.saved": "Saved: {path}",
+    "save.failed": "Couldn't save: {error}",
+    "newFile.title": "New code file",
+    "newFile.placeholder": "example.sh",
+    "newFile.langDesc": "Used to add an extension if the name has none.",
+    "newFile.enterName": "Enter a file name.",
+    "newFile.exists": "\"{path}\" already exists.",
+    "newFile.create": "Create",
+    "save.defaultBase": "code",
+    "danger.rm": "deletes files (rm)",
+    "danger.reboot": "reboots / shuts down the machine",
+    "danger.power": "cuts / cycles server power",
+    "danger.disk": "formats / overwrites a disk",
+    "danger.k8s": "deletes a Kubernetes resource / drains a node",
+    "danger.helm": "uninstalls / rolls back a Helm release",
+    "danger.dctl": "changes the Diamanti cluster",
+    "danger.container": "deletes containers / images",
+    "danger.service": "stops / restarts a service",
+    "danger.kill": "kills processes",
+    "danger.firewall": "removes firewall rules",
+    "danger.user": "changes users / passwords",
+    "danger.perms": "changes permissions in bulk",
+    "danger.rawDisk": "writes directly to a disk",
+    "danger.db": "modifies the database",
+    "danger.pkg": "installs / removes packages",
+    "common.runInTerminal": "Run in terminal",
+    "run.run": "Run",
+    "run.paste": "Write to terminal only (no Enter)",
+    "common.cancel": "Cancel",
+    "run.careful": "Careful: ",
+    "run.fill": "To fill in: ",
+    "run.fillFirst": "Fill in the <...> fields first. Click one to select it, then type to replace it.",
+    "run.info": "{n} command line(s) will be sent to the terminal. Cmd+Enter: run",
+    "run.scriptTitle": "Run script",
+    "preview.titleFile": "Preview: {name}",
+    "preview.title": "Preview",
+    "preview.openSource": "Open source to the side",
+    "preview.openExternal": "Open in browser",
+    "preview.reload": "Reload",
+    "preview.jsOn": "JavaScript on (click to turn off)",
+    "preview.jsOff": "JavaScript off (click to turn on)",
+    "preview.notFound": "File not found: {path}",
+    "preview.noFile": "No file to preview.",
+    "preview.externalFailed": "Couldn't open the file in the browser.",
+    "codeView.title": "Code file",
+    "codeView.makeReadOnly": "Make read-only",
+    "codeView.makeEditable": "Make editable",
+    "codeView.copyAll": "Copy all",
+    "common.copied": "Copied",
+    "codeView.runSelection": "Run selection / line in terminal (⇧⌘↵)",
+    "common.insertIntoNote": "Insert into note as code block",
+    "common.previewSide": "Preview to the side",
+    "codeView.noWrap": "Don't wrap lines",
+    "codeView.wrap": "Wrap long lines",
+    "codeView.search": "Find / replace",
+    "codeView.runScript": "Run script in terminal",
+    "codeView.lines": "{n} lines",
+    "codeView.readOnly": "read-only",
+    "codeView.hintShell": "⌘F find · ⇧⌘↵ run line in terminal",
+    "codeView.hint": "⌘F find · changes save automatically",
+    "codeView.emptyLine": "The line to run is empty.",
+    "common.copy": "Copy",
+    "chip.changeLang": "Change language ({lang})",
+    "chip.addLang": "Add language",
+    "common.saveAsFile": "Save as file",
+    "menu.preview": "Preview",
+    "notice.noTerminal": "Couldn't open the terminal. Is the ecu-terminal plugin enabled?",
+    "notice.noCommand": "No command to run.",
+    "notice.noLine": "No line to run.",
+    "notice.pastedAs": "Added as {lang} code",
+    "notice.unsure": " (not sure)",
+    "notice.changeLang": "Change language",
+    "notice.makePlain": "Make plain text",
+    "notice.blockChanged": "The block has changed, couldn't convert it to plain text. Right-click → Convert code block to plain text.",
+    "notice.plainFailed": "Couldn't convert to plain text.",
+    "notice.clipboardEmpty": "Clipboard is empty.",
+    "notice.unclosed": "The code block isn't closed.",
+    "notice.noteChanged": "The note has changed, link not added.",
+    "notice.selectFirst": "Select the code lines first.",
+    "notice.wrappedAs": "Wrapped in a {lang} block",
+    "notice.openNoteFirst": "Open a note first.",
+    "notice.autoOn": "Auto code detection on",
+    "notice.autoOff": "Auto code detection off",
+    "notice.langChanged": "Language changed. Reload Obsidian to apply it everywhere.",
+    "menu.codeLang": "Code language: {lang} — change…",
+    "menu.copyCode": "Copy code",
+    "menu.runBlock": "Run block in terminal",
+    "menu.runSelection": "Run selection in terminal",
+    "menu.runLine": "Run this line in terminal",
+    "menu.saveAsFile": "Save code as file…",
+    "menu.unwrap": "Convert code block to plain text",
+    "menu.wrap": "Convert selection to code block",
+    "menu.insertFile": "Insert code file…",
+    "cmd.previewHtml": "Preview HTML file to the side",
+    "cmd.pastePlain": "Paste without code detection",
+    "cmd.pasteAsCode": "Paste as code (pick language)",
+    "cmd.changeLang": "Change code block language",
+    "cmd.copyBlock": "Copy code block",
+    "cmd.saveBlock": "Save code block as file",
+    "cmd.insertFile": "Insert code file into note",
+    "cmd.toggleFileMode": "Code file: toggle read-only",
+    "cmd.runLine": "Run line / selection in terminal",
+    "cmd.runBlock": "Run code block in terminal",
+    "cmd.toggleAuto": "Toggle auto code detection on paste",
+    "set.uiLangDesc": "Plugin interface language. Auto follows Obsidian's language.",
+    "set.uiLangAuto": "Auto (follow Obsidian)",
+    "set.uiLangEn": "English",
+    "set.uiLangTr": "Türkçe",
+    "set.hPaste": "Pasting",
+    "set.autoWrap": "Detect code on paste",
+    "set.autoWrapDesc": "Wraps text that looks like code in a code block with the right language tag. Cmd+Shift+V always pastes plain text.",
+    "set.singleLine": "Wrap single-line commands too",
+    "set.singleLineDesc": "E.g. `kubectl get pods -A` pasted on an empty line. Text pasted mid-sentence is never touched.",
+    "set.sensitivity": "Detection sensitivity",
+    "set.sensitivityDesc": "Cautious: only wraps obvious code. Sensitive: wraps on fewer hints.",
+    "set.sensCautious": "Cautious",
+    "set.sensNormal": "Normal",
+    "set.sensSensitive": "Sensitive",
+    "set.shellFence": "Tag for shell blocks",
+    "set.shellFenceDesc": "Both are common; highlighting is the same.",
+    "set.notify": "Show notice",
+    "set.notifyDesc": "After pasting, shows the detected language with 'Change language' and 'Make plain text' buttons.",
+    "set.hView": "Appearance",
+    "set.chips": "Language tag in the editor",
+    "set.chipsDesc": "Language name and save button at the top of each code block. Click the tag to change the language. Applies when the note is reopened.",
+    "set.readingHeader": "Language header in reading view",
+    "set.hFiles": "Code files",
+    "set.codeFolder": "Save folder",
+    "set.codeFolderDesc": "Default folder for 'Save as file' and 'New code file'.",
+    "set.saveLinkMode": "In the note after saving",
+    "set.fileOpenMode": "Open code files as",
+    "set.fileOpenModeDesc": "Read-only prevents accidental edits; the lock button makes a file editable.",
+    "set.modeEdit": "Editable",
+    "set.modeReadOnly": "Read-only",
+    "set.previewScripts": "Run JavaScript in HTML preview",
+    "set.previewScriptsDesc": "The preview opens in a separate, sandboxed frame; page code can't access Obsidian or your files. When off, the page is shown as HTML/CSS only. You can also toggle it per preview with the ⚡ button.",
+    "set.hRun": "Running in terminal",
+    "set.confirmRun": "Always confirm before running",
+    "set.confirmRunDesc": "When off, safe single-line commands run right away. Multi-line commands, <...> placeholders and commands like rm / reboot / kubectl delete / power cycle always ask first.",
+    "set.focusTerminal": "Focus terminal after running",
+    "set.focusTerminalDesc": "Best left on, so you can answer prompts like a sudo password.",
+    "set.fileExts": "Extensions to show in Obsidian",
+    "set.fileExtsDesc": "Files with these extensions show up in the file list and open with highlighting. Changes apply after reloading Obsidian.",
+    "set.resetDefault": "Reset to default",
+    "set.footer": "Right-click a code block to change its language, copy it, save it as a file or convert it to plain text. All commands start with 'ecu-codekit' in the command palette (Cmd+P); you can assign hotkeys under Settings → Hotkeys.",
+  },
+  tr: {
+    "lang.text": "Düz metin",
+    "lang.none": "Dil yok",
+    "langModal.placeholder": "Dil seç ya da yaz (go, bash, yaml…)",
+    "langModal.select": "seç",
+    "langModal.apply": "uygula",
+    "langModal.cancel": "vazgeç",
+    "langModal.useTag": "\"{tag}\" etiketini kullan",
+    "langModal.removeTag": "Dil etiketini kaldır",
+    "langModal.detected": "algılanan",
+    "langModal.current": "şu an",
+    "codeFileSuggest.placeholder": "Nota eklenecek kod dosyası…",
+    "save.title": "Kodu dosya olarak kaydet",
+    "common.fileName": "Dosya adı",
+    "common.language": "Dil",
+    "common.folder": "Klasör",
+    "save.folderDesc": "Boş bırakırsan kasanın köküne kaydedilir.",
+    "save.inNote": "Notta",
+    "link.below": "Kod bloğu kalsın, altına link ekle",
+    "link.replace": "Kod bloğunun yerine link koy",
+    "link.none": "Nota dokunma",
+    "common.save": "Kaydet",
+    "save.emptyName": "Dosya adı boş olamaz.",
+    "save.exists": "\"{path}\" zaten var, başka bir ad yaz.",
+    "save.saved": "Kaydedildi: {path}",
+    "save.failed": "Kaydedilemedi: {error}",
+    "newFile.title": "Yeni kod dosyası",
+    "newFile.placeholder": "ornek.sh",
+    "newFile.langDesc": "Adda uzantı yoksa buna göre eklenir.",
+    "newFile.enterName": "Dosya adı yaz.",
+    "newFile.exists": "\"{path}\" zaten var.",
+    "newFile.create": "Oluştur",
+    "save.defaultBase": "kod",
+    "danger.rm": "dosya siliyor (rm)",
+    "danger.reboot": "makineyi yeniden başlatıyor / kapatıyor",
+    "danger.power": "sunucunun gücünü kesiyor / yeniden başlatıyor",
+    "danger.disk": "diski biçimlendiriyor / üzerine yazıyor",
+    "danger.k8s": "Kubernetes kaynağını siliyor / node'u boşaltıyor",
+    "danger.helm": "Helm sürümünü kaldırıyor / geri alıyor",
+    "danger.dctl": "Diamanti cluster'ında değişiklik yapıyor",
+    "danger.container": "container / imaj siliyor",
+    "danger.service": "servisi durduruyor / yeniden başlatıyor",
+    "danger.kill": "süreç öldürüyor",
+    "danger.firewall": "güvenlik duvarı kuralı siliyor",
+    "danger.user": "kullanıcı / şifre değiştiriyor",
+    "danger.perms": "izinleri toplu değiştiriyor",
+    "danger.rawDisk": "diske doğrudan yazıyor",
+    "danger.db": "veritabanını değiştiriyor",
+    "danger.pkg": "paket kuruyor / kaldırıyor",
+    "common.runInTerminal": "Terminalde çalıştır",
+    "run.run": "Çalıştır",
+    "run.paste": "Sadece terminale yaz (Enter'sız)",
+    "common.cancel": "Vazgeç",
+    "run.careful": "Dikkat: ",
+    "run.fill": "Doldurulacak: ",
+    "run.fillFirst": "Önce <...> alanlarını doldur. Tıklayınca seçilir, yazınca yerine geçer.",
+    "run.info": "{n} komut satırı terminale gönderilecek. Cmd+Enter: çalıştır",
+    "run.scriptTitle": "Script'i çalıştır",
+    "preview.titleFile": "Önizleme: {name}",
+    "preview.title": "Önizleme",
+    "preview.openSource": "Kaynağı yanda aç",
+    "preview.openExternal": "Tarayıcıda aç",
+    "preview.reload": "Yenile",
+    "preview.jsOn": "JavaScript açık (kapatmak için tıkla)",
+    "preview.jsOff": "JavaScript kapalı (açmak için tıkla)",
+    "preview.notFound": "Dosya bulunamadı: {path}",
+    "preview.noFile": "Önizlenecek dosya yok.",
+    "preview.externalFailed": "Dosya tarayıcıda açılamadı.",
+    "codeView.title": "Kod dosyası",
+    "codeView.makeReadOnly": "Salt okunur yap",
+    "codeView.makeEditable": "Düzenlemeye aç",
+    "codeView.copyAll": "Tümünü kopyala",
+    "common.copied": "Kopyalandı",
+    "codeView.runSelection": "Seçimi / satırı terminalde çalıştır (⇧⌘↵)",
+    "common.insertIntoNote": "Nota kod bloğu olarak ekle",
+    "common.previewSide": "Yanda önizle",
+    "codeView.noWrap": "Satırları kaydırma",
+    "codeView.wrap": "Uzun satırları kaydır",
+    "codeView.search": "Ara / değiştir",
+    "codeView.runScript": "Script'i terminalde çalıştır",
+    "codeView.lines": "{n} satır",
+    "codeView.readOnly": "salt okunur",
+    "codeView.hintShell": "⌘F ara · ⇧⌘↵ satırı terminalde çalıştır",
+    "codeView.hint": "⌘F ara · değişiklikler otomatik kaydedilir",
+    "codeView.emptyLine": "Çalıştırılacak satır boş.",
+    "common.copy": "Kopyala",
+    "chip.changeLang": "Dili değiştir ({lang})",
+    "chip.addLang": "Dil ekle",
+    "common.saveAsFile": "Dosya olarak kaydet",
+    "menu.preview": "Önizle",
+    "notice.noTerminal": "Terminal açılamadı. ecu-terminal eklentisi açık mı?",
+    "notice.noCommand": "Çalıştırılacak komut yok.",
+    "notice.noLine": "Çalıştırılacak satır yok.",
+    "notice.pastedAs": "{lang} kodu olarak eklendi",
+    "notice.unsure": " (emin değilim)",
+    "notice.changeLang": "Dili değiştir",
+    "notice.makePlain": "Düz metin yap",
+    "notice.blockChanged": "Blok değişmiş, düz metne çevrilemedi. Sağ tık → Kod bloğunu düz metne çevir.",
+    "notice.plainFailed": "Düz metne çevrilemedi.",
+    "notice.clipboardEmpty": "Pano boş.",
+    "notice.unclosed": "Kod bloğu kapanmamış.",
+    "notice.noteChanged": "Not değişmiş, link eklenmedi.",
+    "notice.selectFirst": "Önce kod olan satırları seç.",
+    "notice.wrappedAs": "{lang} olarak bloğa alındı",
+    "notice.openNoteFirst": "Önce bir not aç.",
+    "notice.autoOn": "Otomatik kod algılama açık",
+    "notice.autoOff": "Otomatik kod algılama kapalı",
+    "notice.langChanged": "Dil değişti. Her yerde uygulanması için Obsidian'ı yeniden yükle.",
+    "menu.codeLang": "Kod dili: {lang} — değiştir…",
+    "menu.copyCode": "Kodu kopyala",
+    "menu.runBlock": "Bloğu terminalde çalıştır",
+    "menu.runSelection": "Seçimi terminalde çalıştır",
+    "menu.runLine": "Bu satırı terminalde çalıştır",
+    "menu.saveAsFile": "Kodu dosya olarak kaydet…",
+    "menu.unwrap": "Kod bloğunu düz metne çevir",
+    "menu.wrap": "Seçimi kod bloğuna çevir",
+    "menu.insertFile": "Kod dosyası ekle…",
+    "cmd.previewHtml": "HTML dosyasını yanda önizle",
+    "cmd.pastePlain": "Kod algılamadan yapıştır",
+    "cmd.pasteAsCode": "Kod olarak yapıştır (dili seç)",
+    "cmd.changeLang": "Kod bloğunun dilini değiştir",
+    "cmd.copyBlock": "Kod bloğunu kopyala",
+    "cmd.saveBlock": "Kod bloğunu dosya olarak kaydet",
+    "cmd.insertFile": "Kod dosyasını nota ekle",
+    "cmd.toggleFileMode": "Kod dosyası: salt okunur aç / kapat",
+    "cmd.runLine": "Satırı / seçimi terminalde çalıştır",
+    "cmd.runBlock": "Kod bloğunu terminalde çalıştır",
+    "cmd.toggleAuto": "Yapıştırınca otomatik kod algılamayı aç / kapat",
+    "set.uiLangDesc": "Eklentinin arayüz dili. Otomatik, Obsidian'ın diline uyar.",
+    "set.uiLangAuto": "Otomatik (Obsidian'a göre)",
+    "set.uiLangEn": "English",
+    "set.uiLangTr": "Türkçe",
+    "set.hPaste": "Yapıştırma",
+    "set.autoWrap": "Yapıştırınca kodu otomatik algıla",
+    "set.autoWrapDesc": "Kod gibi görünen metni doğru dil etiketiyle kod bloğuna alır. Cmd+Shift+V her zaman düz yapıştırır.",
+    "set.singleLine": "Tek satırlık komutlar da bloğa alınsın",
+    "set.singleLineDesc": "Örn. boş satıra yapıştırılan `kubectl get pods -A`. Cümle içine yapıştırınca hiçbir zaman dokunmaz.",
+    "set.sensitivity": "Algılama hassasiyeti",
+    "set.sensitivityDesc": "Temkinli: sadece çok belirgin kodu bloğa alır. Hassas: daha az işaretle de alır.",
+    "set.sensCautious": "Temkinli",
+    "set.sensNormal": "Normal",
+    "set.sensSensitive": "Hassas",
+    "set.shellFence": "Shell blokları için etiket",
+    "set.shellFenceDesc": "Notlarında ikisi de var; renklendirme aynı.",
+    "set.notify": "Bildirim göster",
+    "set.notifyDesc": "Yapıştırınca hangi dil olarak eklendiğini, 'Dili değiştir' ve 'Düz metin yap' düğmeleriyle gösterir.",
+    "set.hView": "Görünüm",
+    "set.chips": "Düzenleme ekranında dil etiketi",
+    "set.chipsDesc": "Kod bloğunun başında dil adı ve kaydet düğmesi. Etikete tıklayınca dil değişir. Notu yeniden açınca uygulanır.",
+    "set.readingHeader": "Okuma modunda dil başlığı",
+    "set.hFiles": "Kod dosyaları",
+    "set.codeFolder": "Kaydetme klasörü",
+    "set.codeFolderDesc": "'Dosya olarak kaydet' ve 'Yeni kod dosyası' varsayılan olarak buraya yazar.",
+    "set.saveLinkMode": "Kaydettikten sonra notta",
+    "set.fileOpenMode": "Kod dosyaları nasıl açılsın",
+    "set.fileOpenModeDesc": "Salt okunurda yanlışlıkla bir şey yazılmaz; kilit düğmesiyle düzenlemeye açılır.",
+    "set.modeEdit": "Düzenlenebilir",
+    "set.modeReadOnly": "Salt okunur",
+    "set.previewScripts": "HTML önizlemede JavaScript çalışsın",
+    "set.previewScriptsDesc": "Önizleme ayrı, yalıtılmış bir çerçevede açılır; sayfadaki kod Obsidian'a ve dosyalarına erişemez. Kapalıyken sayfa sadece HTML/CSS olarak gösterilir. Önizleme penceresindeki ⚡ düğmesiyle tek tek de değiştirebilirsin.",
+    "set.hRun": "Terminalde çalıştırma",
+    "set.confirmRun": "Her komutta önce onay sor",
+    "set.confirmRunDesc": "Kapalıyken tek satırlık, tehlikesiz komutlar direkt çalışır. Çok satırlı, <...> yer tutuculu ya da rm / reboot / kubectl delete / power cycle gibi komutlarda her zaman sorulur.",
+    "set.focusTerminal": "Çalıştırınca terminale geç",
+    "set.focusTerminalDesc": "sudo şifresi gibi bir şey sorarsa yazabilmen için açık kalması iyi olur.",
+    "set.fileExts": "Obsidian'da gösterilecek uzantılar",
+    "set.fileExtsDesc": "Bu uzantılardaki dosyalar dosya listesinde görünür ve renkli açılır. Değişiklik, Obsidian yeniden yüklenince uygulanır.",
+    "set.resetDefault": "Varsayılana dön",
+    "set.footer": "Kod bloğunda sağ tık: dili değiştir, kopyala, dosya olarak kaydet, düz metne çevir. Komut paletinde (Cmd+P) 'ecu-codekit' ile başlayan tüm komutlar var; istersen Ayarlar → Kısayollar'dan tuş atayabilirsin.",
+  },
+};
+let uiLang = "en";
+function t(key, vars) {
+  const s = (STRINGS[uiLang] && STRINGS[uiLang][key]) || STRINGS.en[key] || key;
+  return vars ? s.replace(/\{(\w+)\}/g, (m, k) => (Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : m)) : s;
+}
+function resolveUiLang(pref) {
+  if (pref === "en" || pref === "tr") return pref;
+  let code = "";
+  try {
+    code = (window.localStorage && window.localStorage.getItem("language")) || "";
+  } catch (e) {
+    code = "";
+  }
+  return /^tr/i.test(code) ? "tr" : "en";
+}
+function setUiLang(pref) {
+  uiLang = resolveUiLang(pref);
+  return uiLang;
+}
+
 const VIEW_CODE = "ecu-codekit-file";
 const VIEW_PREVIEW = "ecu-codekit-preview";
 const LEGACY_VIEWS = { "ecu-codelight-file": VIEW_CODE, "ecu-codelight-preview": VIEW_PREVIEW };
@@ -50,7 +412,9 @@ const LANGS = [
   { id: "diff", label: "Diff / Patch", ext: "diff", aliases: ["patch"], exts: ["diff", "patch"] },
   { id: "lua", label: "Lua", ext: "lua", aliases: [], exts: ["lua"] },
   { id: "makefile", label: "Makefile", ext: "mk", aliases: ["make", "mk"], exts: ["mk"] },
-  { id: "text", label: "Düz metin", ext: "txt", aliases: ["txt", "plain", "plaintext", "log"], exts: ["txt", "log"] },
+  { id: "text", get label() {
+    return t("lang.text");
+  }, ext: "txt", aliases: ["txt", "plain", "plaintext", "log"], exts: ["txt", "log"] },
 ];
 
 const LANG_BY_KEY = new Map();
@@ -64,7 +428,7 @@ function langOf(id) {
   return LANG_BY_KEY.get(String(id).toLowerCase()) || null;
 }
 function langLabel(id) {
-  if (!id) return "Dil yok";
+  if (!id) return t("lang.none");
   const l = langOf(id);
   return l ? l.label : id;
 }
@@ -474,11 +838,11 @@ class LangModal extends SuggestModal {
   constructor(app, opts) {
     super(app);
     this.opts = opts;
-    this.setPlaceholder("Dil seç ya da yaz (go, bash, yaml…)");
+    this.setPlaceholder(t("langModal.placeholder"));
     this.setInstructions([
-      { command: "↑↓", purpose: "seç" },
-      { command: "↵", purpose: "uygula" },
-      { command: "esc", purpose: "vazgeç" },
+      { command: "↑↓", purpose: t("langModal.select") },
+      { command: "↵", purpose: t("langModal.apply") },
+      { command: "esc", purpose: t("langModal.cancel") },
     ]);
   }
   getSuggestions(q) {
@@ -491,16 +855,16 @@ class LangModal extends SuggestModal {
     let out = list
       .filter((l) => !q || l.id.includes(q) || l.label.toLowerCase().includes(q) || l.aliases.some((a) => a.includes(q)))
       .map((l) => ({ id: l.id, label: l.label, detected: detected && langOf(detected) === l, current: current && langOf(current) === l }));
-    if (q && !LANG_BY_KEY.has(q) && /^[\w#+.-]+$/.test(q)) out.push({ id: q, label: `"${q}" etiketini kullan`, custom: true });
-    if (!q && current) out.push({ id: "", label: "Dil etiketini kaldır", remove: true });
+    if (q && !LANG_BY_KEY.has(q) && /^[\w#+.-]+$/.test(q)) out.push({ id: q, label: t("langModal.useTag", { tag: q }), custom: true });
+    if (!q && current) out.push({ id: "", label: t("langModal.removeTag"), remove: true });
     return out;
   }
   renderSuggestion(item, el) {
     el.addClass("sc-lang-item");
     el.createSpan({ text: item.label, cls: "sc-lang-name" });
     const meta = el.createSpan({ cls: "sc-lang-meta" });
-    if (item.detected) meta.createSpan({ text: "algılanan", cls: "sc-tag sc-tag-accent" });
-    if (item.current) meta.createSpan({ text: "şu an", cls: "sc-tag" });
+    if (item.detected) meta.createSpan({ text: t("langModal.detected"), cls: "sc-tag sc-tag-accent" });
+    if (item.current) meta.createSpan({ text: t("langModal.current"), cls: "sc-tag" });
     if (!item.custom && !item.remove) meta.createSpan({ text: item.id, cls: "sc-lang-id" });
   }
   onChooseSuggestion(item) {
@@ -513,7 +877,7 @@ class CodeFileSuggest extends FuzzySuggestModal {
     super(app);
     this.plugin = plugin;
     this.onChoose = onChoose;
-    this.setPlaceholder("Nota eklenecek kod dosyası…");
+    this.setPlaceholder(t("codeFileSuggest.placeholder"));
   }
   getItems() {
     return this.app.vault.getFiles().filter((f) => this.plugin.isCodeExt(f.extension));
@@ -538,11 +902,11 @@ class SaveModal extends Modal {
   }
   onOpen() {
     const { contentEl } = this;
-    this.titleEl.setText("Kodu dosya olarak kaydet");
+    this.titleEl.setText(t("save.title"));
     contentEl.addClass("sc-save");
 
     let nameInput;
-    new Setting(contentEl).setName("Dosya adı").addText((t) => {
+    new Setting(contentEl).setName(t("common.fileName")).addText((t) => {
       nameInput = t;
       t.setValue(this.name).onChange((v) => (this.name = v));
       t.inputEl.addClass("sc-wide");
@@ -552,7 +916,7 @@ class SaveModal extends Modal {
         t.inputEl.setSelectionRange(0, dot > 0 ? dot : this.name.length);
       }, 0);
     });
-    new Setting(contentEl).setName("Dil").addDropdown((d) => {
+    new Setting(contentEl).setName(t("common.language")).addDropdown((d) => {
       for (const l of LANGS) d.addOption(l.id, l.label);
       if (!langOf(this.lang)) d.addOption(this.lang, this.lang);
       d.setValue(this.lang).onChange((v) => {
@@ -566,15 +930,15 @@ class SaveModal extends Modal {
       });
     });
     new Setting(contentEl)
-      .setName("Klasör")
-      .setDesc("Boş bırakırsan kasanın köküne kaydedilir.")
+      .setName(t("common.folder"))
+      .setDesc(t("save.folderDesc"))
       .addText((t) => t.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
     if (this.opts.canLink) {
-      new Setting(contentEl).setName("Notta").addDropdown((d) =>
+      new Setting(contentEl).setName(t("save.inNote")).addDropdown((d) =>
         d
-          .addOption("below", "Kod bloğu kalsın, altına link ekle")
-          .addOption("replace", "Kod bloğunun yerine link koy")
-          .addOption("none", "Nota dokunma")
+          .addOption("below", t("link.below"))
+          .addOption("replace", t("link.replace"))
+          .addOption("none", t("link.none"))
           .setValue(this.linkMode)
           .onChange((v) => (this.linkMode = v))
       );
@@ -582,7 +946,7 @@ class SaveModal extends Modal {
     const err = contentEl.createDiv({ cls: "sc-error" });
     new Setting(contentEl).addButton((b) =>
       b
-        .setButtonText("Kaydet")
+        .setButtonText(t("common.save"))
         .setCta()
         .onClick(() => this.submit(err))
     );
@@ -595,20 +959,20 @@ class SaveModal extends Modal {
   async submit(err) {
     err.setText("");
     let name = this.name.trim().replace(/[\\:*?"<>|]/g, "-");
-    if (!name) return err.setText("Dosya adı boş olamaz.");
+    if (!name) return err.setText(t("save.emptyName"));
     const l = langOf(this.lang);
     if (!/\.[\w-]+$/.test(name) && l) name += "." + l.ext;
     const path = normalizePath(this.folder ? `${this.folder}/${name}` : name);
-    if (this.app.vault.getAbstractFileByPath(path)) return err.setText(`"${path}" zaten var, başka bir ad yaz.`);
+    if (this.app.vault.getAbstractFileByPath(path)) return err.setText(t("save.exists", { path }));
     try {
       await this.plugin.ensureFolder(path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : "");
       const code = this.opts.code.endsWith("\n") ? this.opts.code : this.opts.code + "\n";
       const file = await this.app.vault.create(path, code);
       this.close();
-      new Notice(`Kaydedildi: ${path}`);
+      new Notice(t("save.saved", { path }));
       if (this.opts.onSaved) this.opts.onSaved(file, this.linkMode);
     } catch (e) {
-      err.setText("Kaydedilemedi: " + (e && e.message ? e.message : e));
+      err.setText(t("save.failed", { error: e && e.message ? e.message : e }));
     }
   }
   onClose() {
@@ -626,32 +990,32 @@ class NewFileModal extends Modal {
   }
   onOpen() {
     const { contentEl } = this;
-    this.titleEl.setText("Yeni kod dosyası");
-    new Setting(contentEl).setName("Dosya adı").addText((t) => {
-      t.setPlaceholder("ornek.sh").onChange((v) => (this.name = v));
+    this.titleEl.setText(t("newFile.title"));
+    new Setting(contentEl).setName(t("common.fileName")).addText((t) => {
+      t.setPlaceholder(t("newFile.placeholder")).onChange((v) => (this.name = v));
       t.inputEl.addClass("sc-wide");
       setTimeout(() => t.inputEl.focus(), 0);
     });
-    new Setting(contentEl).setName("Dil").setDesc("Adda uzantı yoksa buna göre eklenir.").addDropdown((d) => {
+    new Setting(contentEl).setName(t("common.language")).setDesc(t("newFile.langDesc")).addDropdown((d) => {
       for (const l of LANGS) if (this.plugin.isCodeExt(l.ext)) d.addOption(l.id, l.label);
       d.setValue(this.lang).onChange((v) => (this.lang = v));
     });
-    new Setting(contentEl).setName("Klasör").addText((t) => t.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
+    new Setting(contentEl).setName(t("common.folder")).addText((t) => t.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
     const err = contentEl.createDiv({ cls: "sc-error" });
     const go = async () => {
       let name = this.name.trim().replace(/[\\:*?"<>|]/g, "-");
-      if (!name) return err.setText("Dosya adı yaz.");
+      if (!name) return err.setText(t("newFile.enterName"));
       const l = langOf(this.lang);
       if (!/\.[\w-]+$/.test(name)) name += "." + l.ext;
       const path = normalizePath(this.folder ? `${this.folder}/${name}` : name);
-      if (this.app.vault.getAbstractFileByPath(path)) return err.setText(`"${path}" zaten var.`);
+      if (this.app.vault.getAbstractFileByPath(path)) return err.setText(t("newFile.exists", { path }));
       await this.plugin.ensureFolder(this.folder);
       const start = this.lang === "bash" ? "#!/usr/bin/env bash\nset -euo pipefail\n\n" : this.lang === "go" ? "package main\n\nfunc main() {\n}\n" : "";
       const file = await this.app.vault.create(path, start);
       this.close();
       await this.plugin.openCodeFile(file, "edit");
     };
-    new Setting(contentEl).addButton((b) => b.setButtonText("Oluştur").setCta().onClick(go));
+    new Setting(contentEl).addButton((b) => b.setButtonText(t("newFile.create")).setCta().onClick(go));
     this.scope.register([], "Enter", (e) => {
       e.preventDefault();
       go();
@@ -685,26 +1049,29 @@ function findPlaceholders(cmd) {
 }
 
 const DANGER = [
-  [/\brm\s+(-\w*[rf]\w*\s+)*\S/, "dosya siliyor (rm)"],
-  [/\b(reboot|shutdown|poweroff|halt)\b|\binit\s+[06]\b/, "makineyi yeniden başlatıyor / kapatıyor"],
-  [/\bipmitool\b.*\bpower\s+(cycle|off|reset|soft)\b|\bchassis\s+power\b/, "sunucunun gücünü kesiyor / yeniden başlatıyor"],
-  [/\b(mkfs(\.\w+)?|wipefs|fdisk|parted|sgdisk)\b|\bdd\s+if=/, "diski biçimlendiriyor / üzerine yazıyor"],
-  [/\bkubectl\s+(delete|drain|cordon|replace\s+--force)\b/, "Kubernetes kaynağını siliyor / node'u boşaltıyor"],
-  [/\bhelm\s+(uninstall|delete|rollback)\b/, "Helm sürümünü kaldırıyor / geri alıyor"],
-  [/\bdctl\b.*\b(delete|remove|destroy|reset|configure\s+--master|bundle\s+distribution\s+start|upgrade\s+(\w+\s+)?start)\b/, "Diamanti cluster'ında değişiklik yapıyor"],
-  [/\bdocker\s+(rm|rmi|system\s+prune|volume\s+rm)\b|\b(podman|crictl)\s+(rm|rmi)\b/, "container / imaj siliyor"],
-  [/\bsystemctl\s+(stop|restart|disable|mask|kill)\b/, "servisi durduruyor / yeniden başlatıyor"],
-  [/\b(kill\s+-9|killall|pkill)\b/, "süreç öldürüyor"],
-  [/\b(iptables\s+-F|nft\s+flush|firewall-cmd\s+.*--remove)\b/, "güvenlik duvarı kuralı siliyor"],
-  [/\b(userdel|passwd|chpasswd)\b/, "kullanıcı / şifre değiştiriyor"],
-  [/\bchmod\s+(-R\s+)?777\b|\bchown\s+-R\b/, "izinleri toplu değiştiriyor"],
-  [/>\s*\/dev\/(sd|nvme|vd)\w*/, "diske doğrudan yazıyor"],
-  [/\b(pgbackrest\s+.*\b(restore|stanza-delete)|patronictl\s+(failover|switchover|remove|reinit))\b/, "veritabanını değiştiriyor"],
-  [/\brpm\s+(-e|--erase|-U|-i)|\b(yum|dnf|apt(-get)?)\s+(remove|erase|purge|install|update|upgrade)\b/, "paket kuruyor / kaldırıyor"],
+  [/\brm\s+(-\w*[rf]\w*\s+)*\S/, "danger.rm"],
+  [/\b(reboot|shutdown|poweroff|halt)\b|\binit\s+[06]\b/, "danger.reboot"],
+  [/\bipmitool\b.*\bpower\s+(cycle|off|reset|soft)\b|\bchassis\s+power\b/, "danger.power"],
+  [/\b(mkfs(\.\w+)?|wipefs|fdisk|parted|sgdisk)\b|\bdd\s+if=/, "danger.disk"],
+  [/\bkubectl\s+(delete|drain|cordon|replace\s+--force)\b/, "danger.k8s"],
+  [/\bhelm\s+(uninstall|delete|rollback)\b/, "danger.helm"],
+  [/\bdctl\b.*\b(delete|remove|destroy|reset|configure\s+--master|bundle\s+distribution\s+start|upgrade\s+(\w+\s+)?start)\b/, "danger.dctl"],
+  [/\bdocker\s+(rm|rmi|system\s+prune|volume\s+rm)\b|\b(podman|crictl)\s+(rm|rmi)\b/, "danger.container"],
+  [/\bsystemctl\s+(stop|restart|disable|mask|kill)\b/, "danger.service"],
+  [/\b(kill\s+-9|killall|pkill)\b/, "danger.kill"],
+  [/\b(iptables\s+-F|nft\s+flush|firewall-cmd\s+.*--remove)\b/, "danger.firewall"],
+  [/\b(userdel|passwd|chpasswd)\b/, "danger.user"],
+  [/\bchmod\s+(-R\s+)?777\b|\bchown\s+-R\b/, "danger.perms"],
+  [/>\s*\/dev\/(sd|nvme|vd)\w*/, "danger.rawDisk"],
+  [/\b(pgbackrest\s+.*\b(restore|stanza-delete)|patronictl\s+(failover|switchover|remove|reinit))\b/, "danger.db"],
+  [/\brpm\s+(-e|--erase|-U|-i)|\b(yum|dnf|apt(-get)?)\s+(remove|erase|purge|install|update|upgrade)\b/, "danger.pkg"],
 ];
 function findDangers(cmd) {
   const found = [];
-  for (const [re, why] of DANGER) if (re.test(cmd) && !found.includes(why)) found.push(why);
+  for (const [re, key] of DANGER) {
+    const why = t(key);
+    if (re.test(cmd) && !found.includes(why)) found.push(why);
+  }
   return found;
 }
 
@@ -716,7 +1083,7 @@ class RunModal extends Modal {
   }
   onOpen() {
     const { contentEl } = this;
-    this.titleEl.setText(this.opts.title || "Terminalde çalıştır");
+    this.titleEl.setText(this.opts.title || t("common.runInTerminal"));
     contentEl.addClass("sc-run");
 
     const warnEl = contentEl.createDiv({ cls: "sc-run-warn" });
@@ -728,9 +1095,9 @@ class RunModal extends Modal {
     const info = contentEl.createDiv({ cls: "sc-run-info" });
 
     const btns = contentEl.createDiv({ cls: "sc-run-btns" });
-    const runBtn = btns.createEl("button", { text: "Çalıştır", cls: "mod-cta" });
-    const pasteBtn = btns.createEl("button", { text: "Sadece terminale yaz (Enter'sız)" });
-    const cancel = btns.createEl("button", { text: "Vazgeç" });
+    const runBtn = btns.createEl("button", { text: t("run.run"), cls: "mod-cta" });
+    const pasteBtn = btns.createEl("button", { text: t("run.paste") });
+    const cancel = btns.createEl("button", { text: t("common.cancel") });
 
     const refresh = () => {
       const cmd = ta.value;
@@ -738,7 +1105,7 @@ class RunModal extends Modal {
       const ph = findPlaceholders(cmd);
       warnEl.empty();
       if (dangers.length) {
-        warnEl.createSpan({ text: "Dikkat: " });
+        warnEl.createSpan({ text: t("run.careful") });
         warnEl.createSpan({ text: dangers.join(" · ") });
       }
       warnEl.toggleClass("is-visible", dangers.length > 0);
@@ -746,7 +1113,7 @@ class RunModal extends Modal {
       runBtn.toggleClass("mod-cta", dangers.length === 0);
       phEl.empty();
       if (ph.length) {
-        phEl.createSpan({ text: "Doldurulacak: " });
+        phEl.createSpan({ text: t("run.fill") });
         ph.forEach((p) => {
           const b = phEl.createEl("button", { text: p, cls: "sc-ph" });
           b.onclick = () => selectPh(p);
@@ -755,7 +1122,7 @@ class RunModal extends Modal {
       phEl.toggleClass("is-visible", ph.length > 0);
       runBtn.disabled = ph.length > 0 || !cmd.trim();
       const n = cmd.split("\n").filter((l) => l.trim() && !/^\s*#/.test(l)).length;
-      info.setText(ph.length ? "Önce <...> alanlarını doldur. Tıklayınca seçilir, yazınca yerine geçer." : `${n} komut satırı terminale gönderilecek. Cmd+Enter: çalıştır`);
+      info.setText(ph.length ? t("run.fillFirst") : t("run.info", { n }));
     };
     const selectPh = (p) => {
       const i = ta.value.indexOf(p);
@@ -911,7 +1278,7 @@ class HtmlPreviewView extends ItemView {
   }
   getDisplayText() {
     const f = this.file;
-    return f ? `Önizleme: ${f.name}` : "Önizleme";
+    return f ? t("preview.titleFile", { name: f.name }) : t("preview.title");
   }
   get file() {
     const f = this.filePath && this.app.vault.getAbstractFileByPath(this.filePath);
@@ -928,14 +1295,14 @@ class HtmlPreviewView extends ItemView {
   }
   async onOpen() {
     this.contentEl.addClass("sc-preview");
-    this.addAction("code", "Kaynağı yanda aç", () => this.openSource());
-    this.addAction("external-link", "Tarayıcıda aç", () => this.openExternal());
+    this.addAction("code", t("preview.openSource"), () => this.openSource());
+    this.addAction("external-link", t("preview.openExternal"), () => this.openExternal());
     this.scriptBtn = this.addAction("zap", "", () => {
       this.scripts = !this.scripts;
       this.render();
       this.app.workspace.requestSaveLayout();
     });
-    this.addAction("refresh-cw", "Yenile", () => this.render());
+    this.addAction("refresh-cw", t("preview.reload"), () => this.render());
     this.registerEvent(
       this.app.vault.on("modify", (f) => {
         if (f.path !== this.filePath) return;
@@ -962,12 +1329,12 @@ class HtmlPreviewView extends ItemView {
     el.empty();
     if (this.scriptBtn) {
       setIcon(this.scriptBtn, this.scripts ? "zap" : "zap-off");
-      this.scriptBtn.setAttr("aria-label", this.scripts ? "JavaScript açık (kapatmak için tıkla)" : "JavaScript kapalı (açmak için tıkla)");
+      this.scriptBtn.setAttr("aria-label", this.scripts ? t("preview.jsOn") : t("preview.jsOff"));
     }
     const f = this.file;
     if (this.leaf.updateHeader) this.leaf.updateHeader();
     if (!f) {
-      el.createDiv({ cls: "sc-preview-empty", text: this.filePath ? "Dosya bulunamadı: " + this.filePath : "Önizlenecek dosya yok." });
+      el.createDiv({ cls: "sc-preview-empty", text: this.filePath ? t("preview.notFound", { path: this.filePath }) : t("preview.noFile") });
       return;
     }
     const token = (this.renderToken = (this.renderToken || 0) + 1);
@@ -1005,7 +1372,7 @@ class HtmlPreviewView extends ItemView {
     try {
       window.require("electron").shell.openPath(base + "/" + f.path);
     } catch (e) {
-      new Notice("Dosya tarayıcıda açılamadı.");
+      new Notice(t("preview.externalFailed"));
     }
   }
 }
@@ -1041,21 +1408,21 @@ class CodeFileView extends TextFileView {
     return "file-code";
   }
   getDisplayText() {
-    return this.file ? this.file.name : "Kod dosyası";
+    return this.file ? this.file.name : t("codeView.title");
   }
   canAcceptExtension(ext) {
     return this.plugin.registeredExts.has(String(ext).toLowerCase());
   }
   onload() {
     super.onload();
-    this.lockBtn = this.addAction("lock-open", "Salt okunur yap", () => this.setReadOnly(!this.readOnly));
-    this.addAction("copy", "Tümünü kopyala", async () => {
+    this.lockBtn = this.addAction("lock-open", t("codeView.makeReadOnly"), () => this.setReadOnly(!this.readOnly));
+    this.addAction("copy", t("codeView.copyAll"), async () => {
       await navigator.clipboard.writeText(this.data);
-      new Notice("Kopyalandı");
+      new Notice(t("common.copied"));
     });
-    this.runBtn = this.addAction("play", "Seçimi / satırı terminalde çalıştır (⇧⌘↵)", () => this.runSelection());
-    this.addAction("file-input", "Nota kod bloğu olarak ekle", () => this.plugin.insertFileIntoLastNote(this.file));
-    this.previewBtn = this.addAction("eye", "Yanda önizle", () => this.file && this.plugin.openPreview(this.file, "split"));
+    this.runBtn = this.addAction("play", t("codeView.runSelection"), () => this.runSelection());
+    this.addAction("file-input", t("common.insertIntoNote"), () => this.plugin.insertFileIntoLastNote(this.file));
+    this.previewBtn = this.addAction("eye", t("common.previewSide"), () => this.file && this.plugin.openPreview(this.file, "split"));
     this.updateButtons();
   }
   onunload() {
@@ -1065,11 +1432,11 @@ class CodeFileView extends TextFileView {
   }
   onPaneMenu(menu, source) {
     super.onPaneMenu(menu, source);
-    menu.addItem((i) => i.setTitle(this.readOnly ? "Düzenlemeye aç" : "Salt okunur yap").setIcon(this.readOnly ? "pencil" : "lock").onClick(() => this.setReadOnly(!this.readOnly)));
-    menu.addItem((i) => i.setTitle(this.wrap ? "Satırları kaydırma" : "Uzun satırları kaydır").setIcon("wrap-text").onClick(() => this.setWrap(!this.wrap)));
-    menu.addItem((i) => i.setTitle("Ara / değiştir").setIcon("search").onClick(() => this.editor && this.cmMods.Q.openSearchPanel(this.editor)));
+    menu.addItem((i) => i.setTitle(this.readOnly ? t("codeView.makeEditable") : t("codeView.makeReadOnly")).setIcon(this.readOnly ? "pencil" : "lock").onClick(() => this.setReadOnly(!this.readOnly)));
+    menu.addItem((i) => i.setTitle(this.wrap ? t("codeView.noWrap") : t("codeView.wrap")).setIcon("wrap-text").onClick(() => this.setWrap(!this.wrap)));
+    menu.addItem((i) => i.setTitle(t("codeView.search")).setIcon("search").onClick(() => this.editor && this.cmMods.Q.openSearchPanel(this.editor)));
     if (this.isShell())
-      menu.addItem((i) => i.setTitle("Script'i terminalde çalıştır").setIcon("terminal-square").onClick(() => this.runWholeScript()));
+      menu.addItem((i) => i.setTitle(t("codeView.runScript")).setIcon("terminal-square").onClick(() => this.runWholeScript()));
   }
   lang() {
     if (!this.file) return "text";
@@ -1173,9 +1540,9 @@ class CodeFileView extends TextFileView {
     el.empty();
     el.createSpan({ cls: "sc-file-lang", text: langLabel(this.lang()) });
     const lines = this.editor ? this.editor.state.doc.lines : this.data.split("\n").length;
-    el.createSpan({ cls: "sc-file-info", text: `${lines} satır` });
-    if (this.readOnly) el.createSpan({ cls: "sc-file-badge", text: "salt okunur" });
-    el.createSpan({ cls: "sc-file-hint", text: this.isShell() ? "⌘F ara · ⇧⌘↵ satırı terminalde çalıştır" : "⌘F ara · değişiklikler otomatik kaydedilir" });
+    el.createSpan({ cls: "sc-file-info", text: t("codeView.lines", { n: lines }) });
+    if (this.readOnly) el.createSpan({ cls: "sc-file-badge", text: t("codeView.readOnly") });
+    el.createSpan({ cls: "sc-file-hint", text: this.isShell() ? t("codeView.hintShell") : t("codeView.hint") });
   }
   setReadOnly(ro) {
     this.readOnly = ro;
@@ -1193,7 +1560,7 @@ class CodeFileView extends TextFileView {
   updateButtons() {
     if (this.lockBtn) {
       setIcon(this.lockBtn, this.readOnly ? "lock" : "lock-open");
-      this.lockBtn.setAttr("aria-label", this.readOnly ? "Düzenlemeye aç" : "Salt okunur yap");
+      this.lockBtn.setAttr("aria-label", this.readOnly ? t("codeView.makeEditable") : t("codeView.makeReadOnly"));
     }
     if (this.runBtn) this.runBtn.toggle(this.isShell());
     if (this.previewBtn) this.previewBtn.toggle(canPreview(this.file));
@@ -1204,14 +1571,14 @@ class CodeFileView extends TextFileView {
     const sel = st.selection.main;
     let text = st.sliceDoc(sel.from, sel.to);
     if (!text.trim()) text = st.doc.lineAt(sel.head).text;
-    if (!text.trim()) return new Notice("Çalıştırılacak satır boş.");
+    if (!text.trim()) return new Notice(t("codeView.emptyLine"));
     this.plugin.runInTerminal(text, { source: this.file ? this.file.name : "" });
   }
   runWholeScript() {
     if (!this.file) return;
     const adapter = this.app.vault.adapter;
     const full = adapter.getFullPath ? adapter.getFullPath(this.file.path) : this.file.path;
-    this.plugin.runInTerminal(`bash '${full.replace(/'/g, "'\\''")}'`, { force: true, title: "Script'i çalıştır" });
+    this.plugin.runInTerminal(`bash '${full.replace(/'/g, "'\\''")}'`, { force: true, title: t("run.scriptTitle") });
   }
 }
 
@@ -1252,10 +1619,10 @@ function buildEditorExtension(plugin) {
           plugin.chipAction(view, this.lineFrom, action);
         });
       };
-      btn("copy", "Kopyala", "copy");
-      if (isShellLang(this.lang)) btn("play", "Terminalde çalıştır", "run", "sc-chip-run");
-      btn("languages", this.lang ? `Dili değiştir (${langLabel(this.lang)})` : "Dil ekle", "lang");
-      btn("save", "Dosya olarak kaydet", "save");
+      btn("copy", t("common.copy"), "copy");
+      if (isShellLang(this.lang)) btn("play", t("common.runInTerminal"), "run", "sc-chip-run");
+      btn("languages", this.lang ? t("chip.changeLang", { lang: langLabel(this.lang) }) : t("chip.addLang"), "lang");
+      btn("save", t("common.saveAsFile"), "save");
       return wrap;
     }
     ignoreEvent() {
@@ -1312,6 +1679,7 @@ const DEFAULTS = {
   sensitivity: "normal",
   notify: true,
   chips: true,
+  uiLang: "auto",
   readingHeader: true,
   shellFence: "bash",
   codeFolder: "Kodlar",
@@ -1327,6 +1695,7 @@ const MIN_SCORE = { hassas: 4, normal: 6, temkinli: 10 };
 module.exports = class EcuCodekit extends Plugin {
   async onload() {
     this.settings = Object.assign({}, DEFAULTS, await this.loadData());
+    setUiLang(this.settings.uiLang);
     this.plainPasteAt = 0;
     this.registeredExts = new Set();
     this.lastMarkdownLeaf = null;
@@ -1355,13 +1724,13 @@ module.exports = class EcuCodekit extends Plugin {
       this.app.workspace.on("file-menu", (menu, file) => {
         if (!(file instanceof TFile)) return;
         if (canPreview(file)) {
-          menu.addItem((i) => i.setTitle("Önizle").setIcon("eye").onClick(() => this.openPreview(file, "tab")));
-          menu.addItem((i) => i.setTitle("Yanda önizle").setIcon("columns-2").onClick(() => this.openPreview(file, "split")));
+          menu.addItem((i) => i.setTitle(t("menu.preview")).setIcon("eye").onClick(() => this.openPreview(file, "tab")));
+          menu.addItem((i) => i.setTitle(t("common.previewSide")).setIcon("columns-2").onClick(() => this.openPreview(file, "split")));
         }
         if (!this.isCodeExt(file.extension)) return;
         menu.addItem((i) =>
           i
-            .setTitle("Nota kod bloğu olarak ekle")
+            .setTitle(t("common.insertIntoNote"))
             .setIcon("file-input")
             .onClick(() => this.insertFileIntoLastNote(file))
         );
@@ -1468,8 +1837,8 @@ module.exports = class EcuCodekit extends Plugin {
       const m = /^\s*def\s+(\w+)/m.exec(code) || /^\s*class\s+(\w+)/m.exec(code);
       if (m) base = m[1];
     }
-    if (!base) base = slugName(sourcePath ? sourcePath.split("/").pop() : "") || "kod";
-    base = slugName(base) || "kod";
+    if (!base) base = slugName(sourcePath ? sourcePath.split("/").pop() : "") || t("save.defaultBase");
+    base = slugName(base) || t("save.defaultBase");
     const dir = folder ? normalizePath(folder) + "/" : "";
     let name = `${base}.${ext}`;
     for (let i = 2; this.app.vault.getAbstractFileByPath(dir + name) && i < 500; i++) name = `${base}-${i}.${ext}`;
@@ -1518,7 +1887,7 @@ module.exports = class EcuCodekit extends Plugin {
 
   async sendToTerminal(cmd, enter) {
     const t = await this.terminalSession();
-    if (!t) return new Notice("Terminal açılamadı. ecu-terminal eklentisi açık mı?");
+    if (!t) return new Notice(t("notice.noTerminal"));
     const text = cmd.replace(/\r\n?/g, "\n").replace(/\n/g, "\r") + (enter ? "\r" : "");
     t.session.pty.write(text);
     if (this.settings.focusTerminal || !enter) {
@@ -1530,7 +1899,7 @@ module.exports = class EcuCodekit extends Plugin {
   runInTerminal(code, opts) {
     opts = opts || {};
     const cmd = cleanCommands(code);
-    if (!cmd.trim()) return new Notice("Çalıştırılacak komut yok.");
+    if (!cmd.trim()) return new Notice(t("notice.noCommand"));
     const lines = cmd.split("\n").filter((l) => l.trim() && !/^\s*#/.test(l));
     const risky = findDangers(cmd).length > 0 || findPlaceholders(cmd).length > 0;
     if (!opts.force && !risky && lines.length <= 1 && !this.settings.confirmRun) return this.sendToTerminal(cmd, true);
@@ -1540,7 +1909,7 @@ module.exports = class EcuCodekit extends Plugin {
   runCursorLine(editor) {
     const sel = editor.getSelection();
     const text = sel.trim() ? sel : editor.getLine(editor.getCursor().line);
-    if (!text.trim() || /^\s*(```|~~~)/.test(text)) return new Notice("Çalıştırılacak satır yok.");
+    if (!text.trim() || /^\s*(```|~~~)/.test(text)) return new Notice(t("notice.noLine"));
     this.runInTerminal(text);
   }
 
@@ -1589,11 +1958,11 @@ module.exports = class EcuCodekit extends Plugin {
 
   pasteNotice(res, rec) {
     const frag = createFragment((f) => {
-      f.createSpan({ text: `${langLabel(res.lang)} kodu olarak eklendi` });
-      if (!res.confident) f.createSpan({ text: " (emin değilim)", cls: "sc-notice-dim" });
+      f.createSpan({ text: t("notice.pastedAs", { lang: langLabel(res.lang) }) });
+      if (!res.confident) f.createSpan({ text: t("notice.unsure"), cls: "sc-notice-dim" });
       const row = f.createDiv({ cls: "sc-notice-row" });
-      const b1 = row.createEl("button", { text: "Dili değiştir" });
-      const b2 = row.createEl("button", { text: "Düz metin yap" });
+      const b1 = row.createEl("button", { text: t("notice.changeLang") });
+      const b2 = row.createEl("button", { text: t("notice.makePlain") });
       b1.onclick = () => {
         const ad = editorAd(rec.editor);
         const blk = blockAt(ad, rec.fenceLine);
@@ -1605,9 +1974,9 @@ module.exports = class EcuCodekit extends Plugin {
           const a = ed.offsetToPos(rec.startOffset);
           const b = ed.offsetToPos(rec.startOffset + rec.text.length);
           if (ed.getRange(a, b) === rec.text) ed.replaceRange(rec.raw, a, b);
-          else new Notice("Blok değişmiş, düz metne çevrilemedi. Sağ tık → Kod bloğunu düz metne çevir.");
+          else new Notice(t("notice.blockChanged"));
         } catch (e) {
-          new Notice("Düz metne çevrilemedi.");
+          new Notice(t("notice.plainFailed"));
         }
       };
     });
@@ -1621,7 +1990,7 @@ module.exports = class EcuCodekit extends Plugin {
 
   async pasteAsCode(editor) {
     const t = await navigator.clipboard.readText();
-    if (!t.trim()) return new Notice("Pano boş.");
+    if (!t.trim()) return new Notice(t("notice.clipboardEmpty"));
     const res = detectLanguage(t, { minScore: 1 });
     const insert = (lang) => {
       const from = editor.getCursor("from");
@@ -1648,7 +2017,7 @@ module.exports = class EcuCodekit extends Plugin {
   }
 
   unwrapBlock(ad, blk) {
-    if (blk.end < 0) return new Notice("Kod bloğu kapanmamış.");
+    if (blk.end < 0) return new Notice(t("notice.unclosed"));
     const body = blk.code
       .split("\n")
       .map((l) => (l ? blk.indent + l : l))
@@ -1666,7 +2035,7 @@ module.exports = class EcuCodekit extends Plugin {
       onSaved: (file, mode) => {
         if (mode === "none") return;
         const cur = blockAt(ad, blk.start);
-        if (!cur || cur.code !== blk.code) return new Notice("Not değişmiş, link eklenmedi.");
+        if (!cur || cur.code !== blk.code) return new Notice(t("notice.noteChanged"));
         const link = this.app.fileManager.generateMarkdownLink(file, sourcePath || "");
         if (mode === "replace") ad.replaceLines(cur.start, cur.end, cur.indent + link);
         else ad.replaceLines(cur.end, cur.end, ad.line(cur.end) + "\n" + cur.indent + link);
@@ -1677,12 +2046,12 @@ module.exports = class EcuCodekit extends Plugin {
   async copyBlock(blk) {
     const text = isShellLang(blk.lang) ? cleanCommands(blk.code) || blk.code : blk.code;
     await navigator.clipboard.writeText(text);
-    new Notice("Kopyalandı");
+    new Notice(t("common.copied"));
   }
 
   wrapSelection(editor) {
     const sel = editor.getSelection();
-    if (!sel.trim()) return new Notice("Önce kod olan satırları seç.");
+    if (!sel.trim()) return new Notice(t("notice.selectFirst"));
     const from = editor.getCursor("from");
     const before = editor.getLine(from.line).slice(0, from.ch);
     const res = detectLanguage(sel, { minScore: 1 });
@@ -1693,7 +2062,7 @@ module.exports = class EcuCodekit extends Plugin {
     };
     if (res && res.confident) {
       apply(res.lang);
-      new Notice(`${langLabel(res.lang)} olarak bloğa alındı`);
+      new Notice(t("notice.wrappedAs", { lang: langLabel(res.lang) }));
     } else new LangModal(this.app, { detected: res && res.lang, onChoose: apply }).open();
   }
 
@@ -1725,16 +2094,16 @@ module.exports = class EcuCodekit extends Plugin {
       menu.addSeparator();
       menu.addItem((i) =>
         i
-          .setTitle(`Kod dili: ${langLabel(blk.lang)} — değiştir…`)
+          .setTitle(t("menu.codeLang", { lang: langLabel(blk.lang) }))
           .setIcon("languages")
           .setSection("ecu-codekit")
           .onClick(() => this.openLangModal(ad, blk))
       );
-      menu.addItem((i) => i.setTitle("Kodu kopyala").setIcon("copy").setSection("ecu-codekit").onClick(() => this.copyBlock(blk)));
+      menu.addItem((i) => i.setTitle(t("menu.copyCode")).setIcon("copy").setSection("ecu-codekit").onClick(() => this.copyBlock(blk)));
       if (isShellLang(blk.lang)) {
         menu.addItem((i) =>
           i
-            .setTitle("Bloğu terminalde çalıştır")
+            .setTitle(t("menu.runBlock"))
             .setIcon("play")
             .setSection("ecu-codekit")
             .onClick(() => this.runInTerminal(blk.code))
@@ -1743,7 +2112,7 @@ module.exports = class EcuCodekit extends Plugin {
         if (onCode && (editor.somethingSelected() || blk.code.split("\n").length > 1))
           menu.addItem((i) =>
             i
-              .setTitle(editor.somethingSelected() ? "Seçimi terminalde çalıştır" : "Bu satırı terminalde çalıştır")
+              .setTitle(editor.somethingSelected() ? t("menu.runSelection") : t("menu.runLine"))
               .setIcon("terminal-square")
               .setSection("ecu-codekit")
               .onClick(() => this.runCursorLine(editor))
@@ -1751,14 +2120,14 @@ module.exports = class EcuCodekit extends Plugin {
       }
       menu.addItem((i) =>
         i
-          .setTitle("Kodu dosya olarak kaydet…")
+          .setTitle(t("menu.saveAsFile"))
           .setIcon("save")
           .setSection("ecu-codekit")
           .onClick(() => this.saveBlock(ad, blk, sourcePath))
       );
       menu.addItem((i) =>
         i
-          .setTitle("Kod bloğunu düz metne çevir")
+          .setTitle(t("menu.unwrap"))
           .setIcon("remove-formatting")
           .setSection("ecu-codekit")
           .onClick(() => this.unwrapBlock(ad, blk))
@@ -1766,7 +2135,7 @@ module.exports = class EcuCodekit extends Plugin {
     } else if (editor.somethingSelected()) {
       menu.addItem((i) =>
         i
-          .setTitle("Seçimi kod bloğuna çevir")
+          .setTitle(t("menu.wrap"))
           .setIcon("code-2")
           .setSection("ecu-codekit")
           .onClick(() => this.wrapSelection(editor))
@@ -1775,7 +2144,7 @@ module.exports = class EcuCodekit extends Plugin {
     if (!blk) {
       menu.addItem((i) =>
         i
-          .setTitle("Kod dosyası ekle…")
+          .setTitle(t("menu.insertFile"))
           .setIcon("file-code")
           .setSection("ecu-codekit")
           .onClick(() => new CodeFileSuggest(this.app, this, (f) => this.insertFile(editor, f)).open())
@@ -1799,7 +2168,7 @@ module.exports = class EcuCodekit extends Plugin {
 
   insertFileIntoLastNote(file) {
     const leaf = this.lastMarkdownLeaf;
-    if (!leaf || !(leaf.view instanceof MarkdownView) || !leaf.view.editor) return new Notice("Önce bir not aç.");
+    if (!leaf || !(leaf.view instanceof MarkdownView) || !leaf.view.editor) return new Notice(t("notice.openNoteFirst"));
     this.app.workspace.setActiveLeaf(leaf, { focus: true });
     this.insertFile(leaf.view.editor, file);
   }
@@ -1813,7 +2182,7 @@ module.exports = class EcuCodekit extends Plugin {
       const m = /(?:^|\s)language-([^\s]+)/.exec(code.className);
       const lang = m ? m[1] : "";
       const head = createDiv({ cls: "sc-head" });
-      head.createSpan({ cls: "sc-head-lang", text: lang ? langLabel(lang) : "Düz metin" });
+      head.createSpan({ cls: "sc-head-lang", text: lang ? langLabel(lang) : t("lang.text") });
       const text = () => code.textContent.replace(/\n$/, "");
       const button = (icon, label, fn) => {
         const b = head.createEl("button", { cls: "sc-head-btn clickable-icon", attr: { "aria-label": label } });
@@ -1824,9 +2193,9 @@ module.exports = class EcuCodekit extends Plugin {
           fn();
         });
       };
-      button("copy", "Kopyala", () => this.copyBlock({ code: text(), lang }));
-      if (isShellLang(lang)) button("play", "Terminalde çalıştır", () => this.runInTerminal(text()));
-      button("save", "Dosya olarak kaydet", () => {
+      button("copy", t("common.copy"), () => this.copyBlock({ code: text(), lang }));
+      if (isShellLang(lang)) button("play", t("common.runInTerminal"), () => this.runInTerminal(text()));
+      button("save", t("common.saveAsFile"), () => {
         const l = lang || (detectLanguage(text(), { minScore: 1 }) || {}).lang || "text";
         new SaveModal(this, { code: text(), lang: l, sourcePath: ctx.sourcePath, canLink: false }).open();
       });
@@ -1840,7 +2209,7 @@ module.exports = class EcuCodekit extends Plugin {
 
     this.addCommand({
       id: "preview-html",
-      name: "HTML dosyasını yanda önizle",
+      name: t("cmd.previewHtml"),
       checkCallback: (checking) => {
         const f = this.app.workspace.getActiveFile();
         if (!canPreview(f)) return false;
@@ -1851,22 +2220,22 @@ module.exports = class EcuCodekit extends Plugin {
 
     this.addCommand({
       id: "paste-plain",
-      name: "Kod algılamadan yapıştır",
+      name: t("cmd.pastePlain"),
       editorCallback: (editor) => this.pastePlain(editor),
     });
     this.addCommand({
       id: "paste-as-code",
-      name: "Kod olarak yapıştır (dili seç)",
+      name: t("cmd.pasteAsCode"),
       editorCallback: (editor) => this.pasteAsCode(editor),
     });
     this.addCommand({
       id: "wrap-selection",
-      name: "Seçimi kod bloğuna çevir",
+      name: t("menu.wrap"),
       editorCallback: (editor) => this.wrapSelection(editor),
     });
     this.addCommand({
       id: "change-language",
-      name: "Kod bloğunun dilini değiştir",
+      name: t("cmd.changeLang"),
       editorCheckCallback: (checking, editor) => {
         const blk = inBlock(editor);
         if (!blk) return false;
@@ -1876,7 +2245,7 @@ module.exports = class EcuCodekit extends Plugin {
     });
     this.addCommand({
       id: "copy-block",
-      name: "Kod bloğunu kopyala",
+      name: t("cmd.copyBlock"),
       editorCheckCallback: (checking, editor) => {
         const blk = inBlock(editor);
         if (!blk) return false;
@@ -1886,7 +2255,7 @@ module.exports = class EcuCodekit extends Plugin {
     });
     this.addCommand({
       id: "save-block",
-      name: "Kod bloğunu dosya olarak kaydet",
+      name: t("cmd.saveBlock"),
       editorCheckCallback: (checking, editor, info) => {
         const blk = inBlock(editor);
         if (!blk) return false;
@@ -1896,7 +2265,7 @@ module.exports = class EcuCodekit extends Plugin {
     });
     this.addCommand({
       id: "unwrap-block",
-      name: "Kod bloğunu düz metne çevir",
+      name: t("menu.unwrap"),
       editorCheckCallback: (checking, editor) => {
         const blk = inBlock(editor);
         if (!blk) return false;
@@ -1906,17 +2275,17 @@ module.exports = class EcuCodekit extends Plugin {
     });
     this.addCommand({
       id: "insert-file",
-      name: "Kod dosyasını nota ekle",
+      name: t("cmd.insertFile"),
       editorCallback: (editor) => new CodeFileSuggest(this.app, this, (f) => this.insertFile(editor, f)).open(),
     });
     this.addCommand({
       id: "new-file",
-      name: "Yeni kod dosyası",
+      name: t("newFile.title"),
       callback: () => new NewFileModal(this).open(),
     });
     this.addCommand({
       id: "toggle-file-mode",
-      name: "Kod dosyası: salt okunur aç / kapat",
+      name: t("cmd.toggleFileMode"),
       checkCallback: (checking) => {
         const v = this.app.workspace.getActiveViewOfType(CodeFileView);
         if (!v) return false;
@@ -1926,13 +2295,13 @@ module.exports = class EcuCodekit extends Plugin {
     });
     this.addCommand({
       id: "run-line",
-      name: "Satırı / seçimi terminalde çalıştır",
+      name: t("cmd.runLine"),
       hotkeys: [{ modifiers: ["Mod", "Shift"], key: "Enter" }],
       editorCallback: (editor) => this.runCursorLine(editor),
     });
     this.addCommand({
       id: "run-block",
-      name: "Kod bloğunu terminalde çalıştır",
+      name: t("cmd.runBlock"),
       editorCheckCallback: (checking, editor) => {
         const blk = inBlock(editor);
         if (!blk || !isShellLang(blk.lang)) return false;
@@ -1942,11 +2311,11 @@ module.exports = class EcuCodekit extends Plugin {
     });
     this.addCommand({
       id: "toggle-auto",
-      name: "Yapıştırınca otomatik kod algılamayı aç / kapat",
+      name: t("cmd.toggleAuto"),
       callback: async () => {
         this.settings.autoWrap = !this.settings.autoWrap;
         await this.saveSettings();
-        new Notice(`Otomatik kod algılama ${this.settings.autoWrap ? "açık" : "kapalı"}`);
+        new Notice(this.settings.autoWrap ? t("notice.autoOn") : t("notice.autoOff"));
       },
     });
   }
@@ -1963,29 +2332,47 @@ class EcuCodekitSettings extends PluginSettingTab {
     const save = () => p.saveSettings();
     containerEl.empty();
 
-    containerEl.createEl("h3", { text: "Yapıştırma" });
     new Setting(containerEl)
-      .setName("Yapıştırınca kodu otomatik algıla")
-      .setDesc("Kod gibi görünen metni doğru dil etiketiyle kod bloğuna alır. Cmd+Shift+V her zaman düz yapıştırır.")
-      .addToggle((t) => t.setValue(p.settings.autoWrap).onChange(async (v) => ((p.settings.autoWrap = v), await save())));
-    new Setting(containerEl)
-      .setName("Tek satırlık komutlar da bloğa alınsın")
-      .setDesc("Örn. boş satıra yapıştırılan `kubectl get pods -A`. Cümle içine yapıştırınca hiçbir zaman dokunmaz.")
-      .addToggle((t) => t.setValue(p.settings.singleLine).onChange(async (v) => ((p.settings.singleLine = v), await save())));
-    new Setting(containerEl)
-      .setName("Algılama hassasiyeti")
-      .setDesc("Temkinli: sadece çok belirgin kodu bloğa alır. Hassas: daha az işaretle de alır.")
+      .setName(t("common.language"))
+      .setDesc(t("set.uiLangDesc"))
       .addDropdown((d) =>
         d
-          .addOption("temkinli", "Temkinli")
-          .addOption("normal", "Normal")
-          .addOption("hassas", "Hassas")
+          .addOption("auto", t("set.uiLangAuto"))
+          .addOption("en", t("set.uiLangEn"))
+          .addOption("tr", t("set.uiLangTr"))
+          .setValue(p.settings.uiLang || "auto")
+          .onChange(async (v) => {
+            p.settings.uiLang = v;
+            setUiLang(v);
+            await save();
+            new Notice(t("notice.langChanged"));
+            this.display();
+          })
+      );
+
+    containerEl.createEl("h3", { text: t("set.hPaste") });
+    new Setting(containerEl)
+      .setName(t("set.autoWrap"))
+      .setDesc(t("set.autoWrapDesc"))
+      .addToggle((t) => t.setValue(p.settings.autoWrap).onChange(async (v) => ((p.settings.autoWrap = v), await save())));
+    new Setting(containerEl)
+      .setName(t("set.singleLine"))
+      .setDesc(t("set.singleLineDesc"))
+      .addToggle((t) => t.setValue(p.settings.singleLine).onChange(async (v) => ((p.settings.singleLine = v), await save())));
+    new Setting(containerEl)
+      .setName(t("set.sensitivity"))
+      .setDesc(t("set.sensitivityDesc"))
+      .addDropdown((d) =>
+        d
+          .addOption("temkinli", t("set.sensCautious"))
+          .addOption("normal", t("set.sensNormal"))
+          .addOption("hassas", t("set.sensSensitive"))
           .setValue(p.settings.sensitivity)
           .onChange(async (v) => ((p.settings.sensitivity = v), await save()))
       );
     new Setting(containerEl)
-      .setName("Shell blokları için etiket")
-      .setDesc("Notlarında ikisi de var; renklendirme aynı.")
+      .setName(t("set.shellFence"))
+      .setDesc(t("set.shellFenceDesc"))
       .addDropdown((d) =>
         d
           .addOption("bash", "bash")
@@ -1994,62 +2381,62 @@ class EcuCodekitSettings extends PluginSettingTab {
           .onChange(async (v) => ((p.settings.shellFence = v), await save()))
       );
     new Setting(containerEl)
-      .setName("Bildirim göster")
-      .setDesc("Yapıştırınca hangi dil olarak eklendiğini, 'Dili değiştir' ve 'Düz metin yap' düğmeleriyle gösterir.")
+      .setName(t("set.notify"))
+      .setDesc(t("set.notifyDesc"))
       .addToggle((t) => t.setValue(p.settings.notify).onChange(async (v) => ((p.settings.notify = v), await save())));
 
-    containerEl.createEl("h3", { text: "Görünüm" });
+    containerEl.createEl("h3", { text: t("set.hView") });
     new Setting(containerEl)
-      .setName("Düzenleme ekranında dil etiketi")
-      .setDesc("Kod bloğunun başında dil adı ve kaydet düğmesi. Etikete tıklayınca dil değişir. Notu yeniden açınca uygulanır.")
+      .setName(t("set.chips"))
+      .setDesc(t("set.chipsDesc"))
       .addToggle((t) => t.setValue(p.settings.chips).onChange(async (v) => ((p.settings.chips = v), await save())));
     new Setting(containerEl)
-      .setName("Okuma modunda dil başlığı")
+      .setName(t("set.readingHeader"))
       .addToggle((t) => t.setValue(p.settings.readingHeader).onChange(async (v) => ((p.settings.readingHeader = v), await save())));
 
-    containerEl.createEl("h3", { text: "Kod dosyaları" });
+    containerEl.createEl("h3", { text: t("set.hFiles") });
     new Setting(containerEl)
-      .setName("Kaydetme klasörü")
-      .setDesc("'Dosya olarak kaydet' ve 'Yeni kod dosyası' varsayılan olarak buraya yazar.")
+      .setName(t("set.codeFolder"))
+      .setDesc(t("set.codeFolderDesc"))
       .addText((t) => t.setValue(p.settings.codeFolder).onChange(async (v) => ((p.settings.codeFolder = v.trim()), await save())));
     new Setting(containerEl)
-      .setName("Kaydettikten sonra notta")
+      .setName(t("set.saveLinkMode"))
       .addDropdown((d) =>
         d
-          .addOption("below", "Kod bloğu kalsın, altına link ekle")
-          .addOption("replace", "Kod bloğunun yerine link koy")
-          .addOption("none", "Nota dokunma")
+          .addOption("below", t("link.below"))
+          .addOption("replace", t("link.replace"))
+          .addOption("none", t("link.none"))
           .setValue(p.settings.saveLinkMode)
           .onChange(async (v) => ((p.settings.saveLinkMode = v), await save()))
       );
     new Setting(containerEl)
-      .setName("Kod dosyaları nasıl açılsın")
-      .setDesc("Salt okunurda yanlışlıkla bir şey yazılmaz; kilit düğmesiyle düzenlemeye açılır.")
+      .setName(t("set.fileOpenMode"))
+      .setDesc(t("set.fileOpenModeDesc"))
       .addDropdown((d) =>
         d
-          .addOption("edit", "Düzenlenebilir")
-          .addOption("readonly", "Salt okunur")
+          .addOption("edit", t("set.modeEdit"))
+          .addOption("readonly", t("set.modeReadOnly"))
           .setValue(p.settings.fileOpenMode === "readonly" ? "readonly" : "edit")
           .onChange(async (v) => ((p.settings.fileOpenMode = v), await save()))
       );
 
     new Setting(containerEl)
-      .setName("HTML önizlemede JavaScript çalışsın")
-      .setDesc("Önizleme ayrı, yalıtılmış bir çerçevede açılır; sayfadaki kod Obsidian'a ve dosyalarına erişemez. Kapalıyken sayfa sadece HTML/CSS olarak gösterilir. Önizleme penceresindeki ⚡ düğmesiyle tek tek de değiştirebilirsin.")
+      .setName(t("set.previewScripts"))
+      .setDesc(t("set.previewScriptsDesc"))
       .addToggle((t) => t.setValue(p.settings.previewScripts).onChange(async (v) => ((p.settings.previewScripts = v), await save())));
 
-    containerEl.createEl("h3", { text: "Terminalde çalıştırma" });
+    containerEl.createEl("h3", { text: t("set.hRun") });
     new Setting(containerEl)
-      .setName("Her komutta önce onay sor")
-      .setDesc("Kapalıyken tek satırlık, tehlikesiz komutlar direkt çalışır. Çok satırlı, <...> yer tutuculu ya da rm / reboot / kubectl delete / power cycle gibi komutlarda her zaman sorulur.")
+      .setName(t("set.confirmRun"))
+      .setDesc(t("set.confirmRunDesc"))
       .addToggle((t) => t.setValue(p.settings.confirmRun).onChange(async (v) => ((p.settings.confirmRun = v), await save())));
     new Setting(containerEl)
-      .setName("Çalıştırınca terminale geç")
-      .setDesc("sudo şifresi gibi bir şey sorarsa yazabilmen için açık kalması iyi olur.")
+      .setName(t("set.focusTerminal"))
+      .setDesc(t("set.focusTerminalDesc"))
       .addToggle((t) => t.setValue(p.settings.focusTerminal).onChange(async (v) => ((p.settings.focusTerminal = v), await save())));
     new Setting(containerEl)
-      .setName("Obsidian'da gösterilecek uzantılar")
-      .setDesc("Bu uzantılardaki dosyalar dosya listesinde görünür ve renkli açılır. Değişiklik, Obsidian yeniden yüklenince uygulanır.")
+      .setName(t("set.fileExts"))
+      .setDesc(t("set.fileExtsDesc"))
       .addTextArea((t) => {
         t.setValue(p.settings.fileExts).onChange(async (v) => ((p.settings.fileExts = v), await save()));
         t.inputEl.rows = 3;
@@ -2058,7 +2445,7 @@ class EcuCodekitSettings extends PluginSettingTab {
       .addExtraButton((b) =>
         b
           .setIcon("rotate-ccw")
-          .setTooltip("Varsayılana dön")
+          .setTooltip(t("set.resetDefault"))
           .onClick(async () => {
             p.settings.fileExts = DEFAULT_FILE_EXTS;
             await save();
@@ -2068,7 +2455,7 @@ class EcuCodekitSettings extends PluginSettingTab {
 
     containerEl.createEl("p", {
       cls: "setting-item-description",
-      text: "Kod bloğunda sağ tık: dili değiştir, kopyala, dosya olarak kaydet, düz metne çevir. Komut paletinde (Cmd+P) 'ecu-codekit' ile başlayan tüm komutlar var; istersen Ayarlar → Kısayollar'dan tuş atayabilirsin.",
+      text: t("set.footer"),
     });
   }
 }

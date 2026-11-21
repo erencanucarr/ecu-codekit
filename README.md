@@ -20,8 +20,8 @@ side by side.
   small form, and risky commands (`rm -rf`, `reboot`, `kubectl delete`, …) ask before running.
 - **Code files**: `.sh .go .py .yaml .json .sql .conf .log` and more open in a CodeMirror
   editor with highlighting, search, a read-only lock and a "run this script" button.
-- **HTML preview**: right-click an `.html` file and choose **Önizle** / **Yanda önizle**
-  (Preview / Preview beside). The preview reloads when the file changes, runs in a
+- **HTML preview**: right-click an `.html` file and choose **Preview** or
+  **Preview beside**. The preview reloads when the file changes, runs in a
   sandbox that can't reach Obsidian or your files, and JavaScript can be switched off.
 - **Save a block as a file** into a folder of your choice, with a link back in the note.
 
@@ -52,7 +52,8 @@ note, preview HTML beside, toggle paste detection.
 
 ## Language
 
-The user interface (menus, notices, settings) is in Turkish.
+The interface is available in English and Turkish. By default it follows Obsidian's
+language; you can pick one under **Settings > ecu-codekit > Language**.
 
 ## License
 
