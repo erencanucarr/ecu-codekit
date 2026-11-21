@@ -15,7 +15,8 @@ side by side.
 - **Code block buttons** on every block: copy, run in terminal (shell blocks),
   change language, save as file.
 - **Run in terminal** (needs [ecu-terminal](https://github.com/erencanucarr/ecu-terminal)):
-  sends a block or the current line (`Cmd/Ctrl+Shift+Enter`) to the terminal. Prompts like
+  sends a block or the current line to the terminal (give "Run line / selection in terminal"
+  a hotkey such as `Cmd/Ctrl+Shift+Enter` under Settings > Hotkeys). Prompts like
   `user@host $` and command output are stripped first. `<placeholders>` are filled in a
   small form, and risky commands (`rm -rf`, `reboot`, `kubectl delete`, …) ask before running.
 - **Code files**: `.sh .go .py .yaml .json .sql .conf .log` and more open in a CodeMirror
@@ -31,17 +32,17 @@ side by side.
 
 ## Install
 
-1. Download or clone this repository into `<your vault>/.obsidian/plugins/ecu-codekit`:
+Desktop only (macOS, Windows, Linux).
 
-   ```sh
-   cd "<your vault>/.obsidian/plugins"
-   git clone https://github.com/erencanucarr/ecu-codekit.git
-   ```
-
+1. From the [latest release](https://github.com/erencanucarr/ecu-codekit/releases/latest),
+   download `main.js`, `manifest.json` and `styles.css` into
+   `<your vault>/.obsidian/plugins/ecu-codekit/`.
 2. In Obsidian, open **Settings > Community plugins**, turn off Restricted mode if needed,
    and enable **ecu-codekit**.
 3. Optional: install [ecu-terminal](https://github.com/erencanucarr/ecu-terminal) to run
    commands from notes.
+
+The plugin itself makes no network requests (an HTML file you preview may load its own resources).
 
 ## Commands
 

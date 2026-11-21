@@ -1809,7 +1809,6 @@ module.exports = class EcuCodekit extends Plugin {
         skipped.push(ext);
       }
     }
-    if (skipped.length) console.log("[ecu-codekit] başka bir eklenti kullandığı için atlanan uzantılar:", skipped.join(", "));
   }
 
   async ensureFolder(folder) {
@@ -2296,7 +2295,6 @@ module.exports = class EcuCodekit extends Plugin {
     this.addCommand({
       id: "run-line",
       name: t("cmd.runLine"),
-      hotkeys: [{ modifiers: ["Mod", "Shift"], key: "Enter" }],
       editorCallback: (editor) => this.runCursorLine(editor),
     });
     this.addCommand({
@@ -2350,7 +2348,7 @@ class EcuCodekitSettings extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl("h3", { text: t("set.hPaste") });
+    new Setting(containerEl).setName(t("set.hPaste")).setHeading();
     new Setting(containerEl)
       .setName(t("set.autoWrap"))
       .setDesc(t("set.autoWrapDesc"))
@@ -2385,7 +2383,7 @@ class EcuCodekitSettings extends PluginSettingTab {
       .setDesc(t("set.notifyDesc"))
       .addToggle((t) => t.setValue(p.settings.notify).onChange(async (v) => ((p.settings.notify = v), await save())));
 
-    containerEl.createEl("h3", { text: t("set.hView") });
+    new Setting(containerEl).setName(t("set.hView")).setHeading();
     new Setting(containerEl)
       .setName(t("set.chips"))
       .setDesc(t("set.chipsDesc"))
@@ -2394,7 +2392,7 @@ class EcuCodekitSettings extends PluginSettingTab {
       .setName(t("set.readingHeader"))
       .addToggle((t) => t.setValue(p.settings.readingHeader).onChange(async (v) => ((p.settings.readingHeader = v), await save())));
 
-    containerEl.createEl("h3", { text: t("set.hFiles") });
+    new Setting(containerEl).setName(t("set.hFiles")).setHeading();
     new Setting(containerEl)
       .setName(t("set.codeFolder"))
       .setDesc(t("set.codeFolderDesc"))
@@ -2425,7 +2423,7 @@ class EcuCodekitSettings extends PluginSettingTab {
       .setDesc(t("set.previewScriptsDesc"))
       .addToggle((t) => t.setValue(p.settings.previewScripts).onChange(async (v) => ((p.settings.previewScripts = v), await save())));
 
-    containerEl.createEl("h3", { text: t("set.hRun") });
+    new Setting(containerEl).setName(t("set.hRun")).setHeading();
     new Setting(containerEl)
       .setName(t("set.confirmRun"))
       .setDesc(t("set.confirmRunDesc"))
