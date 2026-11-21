@@ -8,8 +8,6 @@ const {
   FuzzySuggestModal,
   TextFileView,
   ItemView,
-  Component,
-  MarkdownRenderer,
   MarkdownView,
   TFile,
   normalizePath,
@@ -44,12 +42,14 @@ const STRINGS = {
     "save.exists": "\"{path}\" already exists, pick another name.",
     "save.saved": "Saved: {path}",
     "save.failed": "Couldn't save: {error}",
+    "save.badPath": "Use a path inside the vault: no \"..\", no leading \"/\" and no drive letter.",
     "newFile.title": "New code file",
     "newFile.placeholder": "example.sh",
     "newFile.langDesc": "Used to add an extension if the name has none.",
     "newFile.enterName": "Enter a file name.",
     "newFile.exists": "\"{path}\" already exists.",
     "newFile.create": "Create",
+    "newFile.failed": "Couldn't create the file: {error}",
     "save.defaultBase": "code",
     "danger.rm": "deletes files (rm)",
     "danger.reboot": "reboots / shuts down the machine",
@@ -192,7 +192,9 @@ const STRINGS = {
     "set.modeEdit": "Editable",
     "set.modeReadOnly": "Read-only",
     "set.previewScripts": "Run JavaScript in HTML preview",
-    "set.previewScriptsDesc": "The preview opens in a separate, sandboxed frame; page code can't access Obsidian or your files. When off, the page is shown as HTML/CSS only. You can also toggle it per preview with the ⚡ button.",
+    "set.previewScriptsDesc": "The preview opens in a separate, sandboxed frame; page code can't access Obsidian or read your vault files, and can't use the network unless you allow it below. Images and styles from the page's own folder still load. When off, the page is shown as HTML/CSS only. You can also toggle it per preview with the ⚡ button.",
+    "set.previewNetwork": "Allow network in HTML preview",
+    "set.previewNetworkDesc": "Lets previewed pages load images, styles, fonts and scripts from the internet and, with JavaScript on, make network requests. When off, a page can only load files from its own folder.",
     "set.hRun": "Running in terminal",
     "set.confirmRun": "Always confirm before running",
     "set.confirmRunDesc": "When off, safe single-line commands run right away. Multi-line commands, <...> placeholders, blocks with no language tag and commands like rm / reboot / kubectl delete / power cycle always ask first.",
@@ -229,12 +231,14 @@ const STRINGS = {
     "save.exists": "\"{path}\" zaten var, başka bir ad yaz.",
     "save.saved": "Kaydedildi: {path}",
     "save.failed": "Kaydedilemedi: {error}",
+    "save.badPath": "Kasanın içinde bir yol yaz: \"..\", baştaki \"/\" ve sürücü harfi kullanılamaz.",
     "newFile.title": "Yeni kod dosyası",
     "newFile.placeholder": "ornek.sh",
     "newFile.langDesc": "Adda uzantı yoksa buna göre eklenir.",
     "newFile.enterName": "Dosya adı yaz.",
     "newFile.exists": "\"{path}\" zaten var.",
     "newFile.create": "Oluştur",
+    "newFile.failed": "Dosya oluşturulamadı: {error}",
     "save.defaultBase": "kod",
     "danger.rm": "dosya siliyor (rm)",
     "danger.reboot": "makineyi yeniden başlatıyor / kapatıyor",
@@ -377,7 +381,9 @@ const STRINGS = {
     "set.modeEdit": "Düzenlenebilir",
     "set.modeReadOnly": "Salt okunur",
     "set.previewScripts": "HTML önizlemede JavaScript çalışsın",
-    "set.previewScriptsDesc": "Önizleme ayrı, yalıtılmış bir çerçevede açılır; sayfadaki kod Obsidian'a ve dosyalarına erişemez. Kapalıyken sayfa sadece HTML/CSS olarak gösterilir. Önizleme penceresindeki ⚡ düğmesiyle tek tek de değiştirebilirsin.",
+    "set.previewScriptsDesc": "Önizleme ayrı, yalıtılmış bir çerçevede açılır; sayfadaki kod Obsidian'a erişemez, kasandaki dosyaları okuyamaz ve aşağıda izin vermedikçe ağı kullanamaz. Sayfanın kendi klasöründeki resim ve stiller yine yüklenir. Kapalıyken sayfa sadece HTML/CSS olarak gösterilir. Önizleme penceresindeki ⚡ düğmesiyle tek tek de değiştirebilirsin.",
+    "set.previewNetwork": "HTML önizlemede ağa izin ver",
+    "set.previewNetworkDesc": "Önizlenen sayfalar internetten resim, stil, yazı tipi ve betik yükleyebilir; JavaScript açıksa ağ isteği de yapabilir. Kapalıyken sayfa sadece kendi klasöründeki dosyaları yükleyebilir.",
     "set.hRun": "Terminalde çalıştırma",
     "set.confirmRun": "Her komutta önce onay sor",
     "set.confirmRunDesc": "Kapalıyken tek satırlık, tehlikesiz komutlar direkt çalışır. Çok satırlı, <...> yer tutuculu, dil etiketi olmayan bloklarda ya da rm / reboot / kubectl delete / power cycle gibi komutlarda her zaman sorulur.",
@@ -408,6 +414,9 @@ function resolveUiLang(pref) {
 function setUiLang(pref) {
   uiLang = resolveUiLang(pref);
   return uiLang;
+}
+function defaultCodeFolder(lang) {
+  return lang === "tr" ? "Kodlar" : "Code";
 }
 
 const VIEW_CODE = "ecu-codekit-file";
@@ -933,8 +942,8 @@ function dedent(code) {
     const m = /^[ \t]*/.exec(l)[0].length;
     if (m < min) min = m;
   }
-  if (!isFinite(min) || min === 0) return lines.map((l) => l.replace(/\s+$/, "")).join("\n");
-  return lines.map((l) => l.slice(Math.min(min, /^[ \t]*/.exec(l)[0].length)).replace(/\s+$/, "")).join("\n");
+  if (!isFinite(min) || min === 0) return lines.join("\n");
+  return lines.map((l) => l.slice(Math.min(min, /^[ \t]*/.exec(l)[0].length))).join("\n");
 }
 
 function buildBlock(code, langId, indent) {
@@ -1012,6 +1021,29 @@ class CodeFileSuggest extends FuzzySuggestModal {
   }
 }
 
+function badPath(s) {
+  return /^[\\/]/.test(s) || /^[A-Za-z]:/.test(s) || s.split(/[\\/]/).some((p) => p.trim() === ".." || p.trim() === ".");
+}
+
+function targetPath(folder, rawName, lang) {
+  folder = String(folder || "").trim();
+  rawName = String(rawName || "").trim();
+  if (badPath(folder) || badPath(rawName)) return { error: "bad" };
+  let name = rawName
+    .split("/")
+    .map((p) => p.trim().replace(/[\\:*?"<>|]/g, "-"))
+    .filter(Boolean)
+    .join("/");
+  if (!name) return { error: "empty" };
+  const l = langOf(lang);
+  if (!/\.[\w-]+$/.test(name) && l) name += "." + l.ext;
+  return { path: normalizePath(folder ? `${folder}/${name}` : name) };
+}
+
+function parentOf(path) {
+  return path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : "";
+}
+
 class SaveModal extends Modal {
   constructor(plugin, opts) {
     super(plugin.app);
@@ -1080,14 +1112,16 @@ class SaveModal extends Modal {
   }
   async submit(err) {
     err.setText("");
-    let name = this.name.trim().replace(/[\\:*?"<>|]/g, "-");
-    if (!name) return err.setText(t("save.emptyName"));
-    const l = langOf(this.lang);
-    if (!/\.[\w-]+$/.test(name) && l) name += "." + l.ext;
-    const path = normalizePath(this.folder ? `${this.folder}/${name}` : name);
+    const target = targetPath(this.folder, this.name, this.lang);
+    if (target.error === "empty") return err.setText(t("save.emptyName"));
+    if (target.error) {
+      new Notice(t("save.badPath"));
+      return err.setText(t("save.badPath"));
+    }
+    const path = target.path;
     if (this.app.vault.getAbstractFileByPath(path)) return err.setText(t("save.exists", { path }));
     try {
-      await this.plugin.ensureFolder(path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : "");
+      await this.plugin.ensureFolder(parentOf(path));
       const code = this.opts.code.endsWith("\n") ? this.opts.code : this.opts.code + "\n";
       const file = await this.app.vault.create(path, code);
       this.close();
@@ -1125,17 +1159,26 @@ class NewFileModal extends Modal {
     new Setting(contentEl).setName(t("common.folder")).addText((txt) => txt.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
     const err = contentEl.createDiv({ cls: "sc-error" });
     const go = async () => {
-      let name = this.name.trim().replace(/[\\:*?"<>|]/g, "-");
-      if (!name) return err.setText(t("newFile.enterName"));
-      const l = langOf(this.lang);
-      if (!/\.[\w-]+$/.test(name)) name += "." + l.ext;
-      const path = normalizePath(this.folder ? `${this.folder}/${name}` : name);
+      err.setText("");
+      const target = targetPath(this.folder, this.name, this.lang);
+      if (target.error === "empty") return err.setText(t("newFile.enterName"));
+      if (target.error) {
+        new Notice(t("save.badPath"));
+        return err.setText(t("save.badPath"));
+      }
+      const path = target.path;
       if (this.app.vault.getAbstractFileByPath(path)) return err.setText(t("newFile.exists", { path }));
-      await this.plugin.ensureFolder(this.folder);
-      const start = this.lang === "bash" ? "#!/usr/bin/env bash\nset -euo pipefail\n\n" : this.lang === "go" ? "package main\n\nfunc main() {\n}\n" : "";
-      const file = await this.app.vault.create(path, start);
-      this.close();
-      await this.plugin.openCodeFile(file, "edit");
+      try {
+        await this.plugin.ensureFolder(parentOf(path));
+        const start = this.lang === "bash" ? "#!/usr/bin/env bash\nset -euo pipefail\n\n" : this.lang === "go" ? "package main\n\nfunc main() {\n}\n" : "";
+        const file = await this.app.vault.create(path, start);
+        this.close();
+        await this.plugin.openCodeFile(file, "edit");
+      } catch (e) {
+        const msg = t("newFile.failed", { error: e && e.message ? e.message : e });
+        new Notice(msg);
+        err.setText(msg);
+      }
     };
     new Setting(contentEl).addButton((b) => b.setButtonText(t("newFile.create")).setCta().onClick(go));
     this.scope.register([], "Enter", (e) => {
@@ -1418,7 +1461,7 @@ function loadCM() {
       Q: require("@codemirror/search"),
     };
   } catch (e) {
-    console.warn("[ecu-codekit] CodeMirror modülleri yüklenemedi", e);
+    console.warn("[ecu-codekit] Could not load CodeMirror modules", e);
     return null;
   }
 }
@@ -1471,6 +1514,34 @@ function prismHighlight(cm, getLang) {
     },
     { decorations: (v) => v.decorations }
   );
+}
+
+function escAttr(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function cspPath(url) {
+  return url.replace(/[^\w\-.~%/!$&()*+=:@]/g, (c) => (c.charCodeAt(0) < 128 ? "%" + c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0") : encodeURIComponent(c)));
+}
+
+function previewCsp(dir, scripts, network) {
+  const local = dir ? [cspPath(dir)] : [];
+  const net = network ? ["https:", "http:"] : [];
+  const list = (...xs) => [...local, ...xs, ...net].join(" ");
+  const rules = ["default-src 'none'", `img-src ${list("data:", "blob:")}`, `media-src ${list("data:", "blob:")}`, `font-src ${list("data:")}`, `style-src ${list("'unsafe-inline'")}`];
+  if (scripts) rules.push(`script-src ${list("'unsafe-inline'", "'unsafe-eval'")}`);
+  rules.push(scripts && network ? "connect-src https: http: wss: ws:" : "connect-src 'none'");
+  rules.push(network ? "frame-src https: http:" : "frame-src 'none'");
+  rules.push(network ? "form-action https: http:" : "form-action 'none'");
+  return rules.join("; ");
+}
+
+function previewDoc(html, url, scripts, network) {
+  const dir = url ? url.replace(/[?#].*$/, "").replace(/[^/]*$/, "") : "";
+  let prefix = `<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${escAttr(previewCsp(dir, scripts, network))}">`;
+  if (dir && /\s(?:src|href)=["']?(?![a-z][\w+.-]*:|\/\/|#|\/)[^"'\s>]/i.test(html)) prefix += `<base href="${escAttr(dir)}">`;
+  const m = /^\s*(?:<!--[\s\S]*?-->\s*)*<!doctype[^>]*>/i.exec(html);
+  return m ? m[0] + prefix + html.slice(m[0].length) : prefix + html;
 }
 
 class HtmlPreviewView extends ItemView {
@@ -1554,18 +1625,7 @@ class HtmlPreviewView extends ItemView {
       const frame = el.createEl("iframe", { cls: "sc-preview-frame" });
       frame.setAttr("sandbox", this.scripts ? "allow-scripts allow-popups allow-modals allow-forms" : "allow-popups");
       frame.setAttr("referrerpolicy", "no-referrer");
-      const url = this.app.vault.getResourcePath(f);
-      const head = html.slice(0, 2048);
-      if (/<meta[^>]+charset|<meta[^>]+http-equiv=["']?content-type/i.test(head)) {
-        frame.src = url;
-        return;
-      }
-      let prefix = '<meta charset="utf-8">';
-      if (/\s(?:src|href)=["']?(?![a-z][\w+.-]*:|\/\/|#|\/)[^"'\s>]/i.test(html)) {
-        const dir = url.replace(/[?#].*$/, "").replace(/[^/]*$/, "");
-        prefix += `<base href="${dir}">`;
-      }
-      frame.srcdoc = prefix + html;
+      frame.srcdoc = previewDoc(html, this.app.vault.getResourcePath(f), this.scripts, this.plugin.settings.previewNetwork);
     });
   }
   openSource() {
@@ -1813,7 +1873,7 @@ function buildEditorExtension(plugin) {
       return o.lang === this.lang && o.lineFrom === this.lineFrom;
     }
     toDOM(view) {
-      const wrap = document.createElement("span");
+      const wrap = view.dom.doc.createElement("span");
       wrap.className = "sc-chip-wrap";
       wrap.setAttribute("contenteditable", "false");
       const stop = (e) => {
@@ -1893,20 +1953,23 @@ const DEFAULTS = {
   uiLang: "auto",
   readingHeader: true,
   shellFence: "bash",
-  codeFolder: "Kodlar",
+  codeFolder: "",
   saveLinkMode: "below",
   fileExts: DEFAULT_FILE_EXTS,
   fileOpenMode: "edit",
   confirmRun: false,
   focusTerminal: true,
-  previewScripts: true,
+  previewScripts: false,
+  previewNetwork: false,
 };
 const MIN_SCORE = { hassas: 4, normal: 6, temkinli: 10 };
 
 module.exports = class EcuCodekit extends Plugin {
   async onload() {
-    this.settings = Object.assign({}, DEFAULTS, await this.loadData());
+    const data = await this.loadData();
+    this.settings = Object.assign({}, DEFAULTS, data);
     setUiLang(this.settings.uiLang);
+    if (!data || typeof data.codeFolder !== "string") this.settings.codeFolder = defaultCodeFolder(uiLang);
     this.plainPasteAt = 0;
     this.registeredExts = new Set();
     this.lastMarkdownLeaf = null;
@@ -1919,6 +1982,7 @@ module.exports = class EcuCodekit extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.registerCodeExts();
       this.app.workspace.iterateAllLeaves((leaf) => {
+        if (leaf.view && leaf.view.containerEl) this.watchWindow(leaf.view.containerEl.win);
         const st = leaf.getViewState();
         if (LEGACY_VIEWS[st.type]) leaf.setViewState(Object.assign({}, st, { type: LEGACY_VIEWS[st.type] }));
       });
@@ -1948,14 +2012,9 @@ module.exports = class EcuCodekit extends Plugin {
       })
     );
 
-    this.registerDomEvent(
-      window,
-      "keydown",
-      (e) => {
-        if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.code === "KeyV" || e.key === "V" || e.key === "v")) this.plainPasteAt = Date.now();
-      },
-      true
-    );
+    this.watchedWindows = new WeakSet();
+    this.watchWindow(window);
+    this.registerEvent(this.app.workspace.on("window-open", (win, w) => this.watchWindow(w)));
 
     const ext = buildEditorExtension(this);
     if (ext) this.registerEditorExtension(ext);
@@ -1967,6 +2026,23 @@ module.exports = class EcuCodekit extends Plugin {
   }
 
   onunload() {}
+
+  watchWindow(win) {
+    if (!win || this.watchedWindows.has(win)) return;
+    this.watchedWindows.add(win);
+    this.registerDomEvent(
+      win,
+      "keydown",
+      (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.code === "KeyV" || e.key === "V" || e.key === "v")) this.plainPasteAt = Date.now();
+      },
+      true
+    );
+  }
+
+  refreshPreviews() {
+    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_PREVIEW)) if (leaf.view instanceof HtmlPreviewView) leaf.view.render();
+  }
 
   async openPreview(file, where) {
     const ws = this.app.workspace;
@@ -2638,6 +2714,10 @@ class EcuCodekitSettings extends PluginSettingTab {
       .setName(t("set.previewScripts"))
       .setDesc(t("set.previewScriptsDesc"))
       .addToggle((tg) => tg.setValue(p.settings.previewScripts).onChange(async (v) => ((p.settings.previewScripts = v), await save())));
+    new Setting(containerEl)
+      .setName(t("set.previewNetwork"))
+      .setDesc(t("set.previewNetworkDesc"))
+      .addToggle((tg) => tg.setValue(p.settings.previewNetwork).onChange(async (v) => ((p.settings.previewNetwork = v), await save(), p.refreshPreviews())));
 
     new Setting(containerEl).setName(t("set.hRun")).setHeading();
     new Setting(containerEl)
@@ -2676,3 +2756,4 @@ class EcuCodekitSettings extends PluginSettingTab {
 
 module.exports.detectLanguage = detectLanguage;
 module.exports._internals = { blockAt, parseFence, dedent, buildBlock, fenceFor, langOf, langFromExt, cleanCommands, parseCommands, findPlaceholders, findDangers, flattenTokens, isShellLang };
+Object.assign(module.exports._internals, { defaultCodeFolder, targetPath, previewCsp, previewDoc });
