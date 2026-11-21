@@ -22,8 +22,10 @@ side by side.
 - **Code files**: `.sh .go .py .yaml .json .sql .conf .log` and more open in a CodeMirror
   editor with highlighting, search, a read-only lock and a "run this script" button.
 - **HTML preview**: right-click an `.html` file and choose **Preview** or
-  **Preview beside**. The preview reloads when the file changes, runs in a
-  sandbox that can't reach Obsidian or your files, and JavaScript can be switched off.
+  **Preview beside**. The preview reloads when the file changes and runs in a sandboxed
+  frame with no access to Obsidian. It can show images and styles from the page's own
+  folder but can't read your other vault files. JavaScript is off by default and can be
+  switched on per preview; network access is a separate setting, also off by default.
 - **Save a block as a file** into a folder of your choice, with a link back in the note.
 
 ![Code blocks with copy, run, language and save buttons](docs/code-blocks.png)
@@ -44,7 +46,8 @@ Desktop only (macOS, Windows, Linux).
 3. Optional: install [ecu-terminal](https://github.com/erencanucarr/ecu-terminal) to run
    commands from notes.
 
-The plugin itself makes no network requests (an HTML file you preview may load its own resources).
+The plugin itself makes no network requests. An HTML file you preview can load resources
+from the internet only if you turn on **Allow network in HTML preview**.
 
 ## Commands
 
