@@ -154,6 +154,14 @@ pre:hover > .sc-head .sc-head-btn {
   color: var(--text-muted);
   background: var(--background-modifier-hover);
 }
+.sc-run-note {
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  font-size: var(--font-ui-small);
+  color: var(--text-warning);
+  background: color-mix(in srgb, var(--color-orange) 12%, transparent);
+}
 .sc-run-ph .sc-ph {
   font-family: var(--font-monospace);
   font-size: var(--font-ui-smaller);

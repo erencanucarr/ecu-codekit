@@ -18,7 +18,9 @@ side by side.
   sends a block or the current line to the terminal (give "Run line / selection in terminal"
   a hotkey such as `Cmd/Ctrl+Shift+Enter` under Settings > Hotkeys). Prompts like
   `user@host $` and command output are stripped first. `<placeholders>` are filled in a
-  small form, and risky commands (`rm -rf`, `reboot`, `kubectl delete`, …) ask before running.
+  small form, and risky commands (`rm -rf`, `reboot`, `kubectl delete`, `git push --force`,
+  `curl … | sh`, `DROP TABLE`, `terraform destroy`, …) ask before running. Blocks with no
+  language tag always ask too.
 - **Code files**: `.sh .go .py .yaml .json .sql .conf .log` and more open in a CodeMirror
   editor with highlighting, search, a read-only lock and a "run this script" button.
 - **HTML preview**: right-click an `.html` file and choose **Preview** or
