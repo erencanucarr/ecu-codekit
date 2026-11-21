@@ -25,9 +25,10 @@ side by side.
   editor with highlighting, search, a read-only lock and a "run this script" button.
 - **HTML preview**: right-click an `.html` file and choose **Preview** or
   **Preview beside**. The preview reloads when the file changes and runs in a sandboxed
-  frame with no access to Obsidian. It can show images and styles from the page's own
-  folder but can't read your other vault files. JavaScript is off by default and can be
-  switched on per preview; network access is a separate setting, also off by default.
+  frame with no access to Obsidian or your vault. Obsidian doesn't let the frame load
+  other vault files, so images and stylesheets next to the HTML file aren't shown; inline
+  `<style>` and `data:` images work. JavaScript is off by default and can be switched on
+  per preview; network access is a separate setting, also off by default.
 - **Save a block as a file** into a folder of your choice, with a link back in the note.
 
 ![Code blocks with copy, run, language and save buttons](docs/code-blocks.png)
