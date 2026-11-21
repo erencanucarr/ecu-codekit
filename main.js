@@ -55,18 +55,31 @@ const STRINGS = {
     "danger.reboot": "reboots / shuts down the machine",
     "danger.power": "cuts / cycles server power",
     "danger.disk": "formats / overwrites a disk",
-    "danger.k8s": "deletes a Kubernetes resource / drains a node",
+    "danger.k8s": "deletes a Kubernetes resource / drains or cordons a node",
     "danger.helm": "uninstalls / rolls back a Helm release",
     "danger.dctl": "changes the cluster (dctl)",
-    "danger.container": "deletes containers / images",
+    "danger.container": "deletes containers / images / volumes",
     "danger.service": "stops / restarts a service",
     "danger.kill": "kills processes",
-    "danger.firewall": "removes firewall rules",
+    "danger.firewall": "turns off the firewall / removes its rules",
     "danger.user": "changes users / passwords",
     "danger.perms": "changes permissions in bulk",
     "danger.rawDisk": "writes directly to a disk",
     "danger.db": "modifies the database",
     "danger.pkg": "installs / removes packages",
+    "danger.findDelete": "deletes every file find matches",
+    "danger.mvNull": "moves files into /dev/null (they are lost)",
+    "danger.wipeFile": "wipes / empties files (shred / truncate)",
+    "danger.sysFile": "overwrites a system file",
+    "danger.forkBomb": "fork bomb: spawns processes until the machine freezes",
+    "danger.pipeShell": "runs a script straight from the internet (curl | sh)",
+    "danger.iac": "destroys infrastructure (terraform destroy)",
+    "danger.cloud": "deletes cloud resources (aws / gcloud / az)",
+    "danger.gitForce": "overwrites remote Git history (force push)",
+    "danger.gitDiscard": "throws away uncommitted Git changes / untracked files",
+    "danger.sql": "drops / empties database tables (DROP / TRUNCATE)",
+    "danger.killAll": "kills every process you are allowed to (kill -1)",
+    "danger.crontab": "deletes all your cron jobs (crontab -r)",
     "common.runInTerminal": "Run in terminal",
     "run.run": "Run",
     "run.paste": "Write to terminal only (no Enter)",
@@ -76,6 +89,8 @@ const STRINGS = {
     "run.fillFirst": "Fill in the <...> fields first. Click one to select it, then type to replace it.",
     "run.info": "{n} command line(s) will be sent to the terminal. Cmd+Enter: run",
     "run.scriptTitle": "Run script",
+    "run.untagged": "This block has no language tag. Check that it is a shell command before running it.",
+    "run.mixedPrompt": "Only some lines have a prompt ($ / # / %). Lines before the first prompt are kept, lines after a prompt are treated as output and left out. Check what will be sent.",
     "preview.titleFile": "Preview: {name}",
     "preview.title": "Preview",
     "preview.openSource": "Open source to the side",
@@ -180,7 +195,7 @@ const STRINGS = {
     "set.previewScriptsDesc": "The preview opens in a separate, sandboxed frame; page code can't access Obsidian or your files. When off, the page is shown as HTML/CSS only. You can also toggle it per preview with the ⚡ button.",
     "set.hRun": "Running in terminal",
     "set.confirmRun": "Always confirm before running",
-    "set.confirmRunDesc": "When off, safe single-line commands run right away. Multi-line commands, <...> placeholders and commands like rm / reboot / kubectl delete / power cycle always ask first.",
+    "set.confirmRunDesc": "When off, safe single-line commands run right away. Multi-line commands, <...> placeholders, blocks with no language tag and commands like rm / reboot / kubectl delete / power cycle always ask first.",
     "set.focusTerminal": "Focus terminal after running",
     "set.focusTerminalDesc": "Best left on, so you can answer prompts like a sudo password.",
     "set.fileExts": "Extensions to show in Obsidian",
@@ -225,18 +240,31 @@ const STRINGS = {
     "danger.reboot": "makineyi yeniden başlatıyor / kapatıyor",
     "danger.power": "sunucunun gücünü kesiyor / yeniden başlatıyor",
     "danger.disk": "diski biçimlendiriyor / üzerine yazıyor",
-    "danger.k8s": "Kubernetes kaynağını siliyor / node'u boşaltıyor",
+    "danger.k8s": "Kubernetes kaynağını siliyor / node'u boşaltıyor ya da cordon ediyor",
     "danger.helm": "Helm sürümünü kaldırıyor / geri alıyor",
     "danger.dctl": "cluster'da değişiklik yapıyor (dctl)",
-    "danger.container": "container / imaj siliyor",
+    "danger.container": "container / imaj / volume siliyor",
     "danger.service": "servisi durduruyor / yeniden başlatıyor",
     "danger.kill": "süreç öldürüyor",
-    "danger.firewall": "güvenlik duvarı kuralı siliyor",
+    "danger.firewall": "güvenlik duvarını kapatıyor / kurallarını siliyor",
     "danger.user": "kullanıcı / şifre değiştiriyor",
     "danger.perms": "izinleri toplu değiştiriyor",
     "danger.rawDisk": "diske doğrudan yazıyor",
     "danger.db": "veritabanını değiştiriyor",
     "danger.pkg": "paket kuruyor / kaldırıyor",
+    "danger.findDelete": "find'ın bulduğu tüm dosyaları siliyor",
+    "danger.mvNull": "dosyaları /dev/null'a taşıyor (kaybolurlar)",
+    "danger.wipeFile": "dosyaları geri dönülmez siliyor / boşaltıyor (shred / truncate)",
+    "danger.sysFile": "bir sistem dosyasının üzerine yazıyor",
+    "danger.forkBomb": "fork bomb: makine donana kadar süreç açıyor",
+    "danger.pipeShell": "internetten indirilen script'i doğrudan çalıştırıyor (curl | sh)",
+    "danger.iac": "altyapıyı yok ediyor (terraform destroy)",
+    "danger.cloud": "bulut kaynaklarını siliyor (aws / gcloud / az)",
+    "danger.gitForce": "uzak Git geçmişinin üzerine yazıyor (force push)",
+    "danger.gitDiscard": "commit edilmemiş Git değişikliklerini / izlenmeyen dosyaları siliyor",
+    "danger.sql": "veritabanı tablolarını siliyor / boşaltıyor (DROP / TRUNCATE)",
+    "danger.killAll": "yetkin olan tüm süreçleri öldürüyor (kill -1)",
+    "danger.crontab": "tüm cron işlerini siliyor (crontab -r)",
     "common.runInTerminal": "Terminalde çalıştır",
     "run.run": "Çalıştır",
     "run.paste": "Sadece terminale yaz (Enter'sız)",
@@ -246,6 +274,8 @@ const STRINGS = {
     "run.fillFirst": "Önce <...> alanlarını doldur. Tıklayınca seçilir, yazınca yerine geçer.",
     "run.info": "{n} komut satırı terminale gönderilecek. Cmd+Enter: çalıştır",
     "run.scriptTitle": "Script'i çalıştır",
+    "run.untagged": "Bu bloğun dil etiketi yok. Çalıştırmadan önce bunun bir terminal komutu olduğundan emin ol.",
+    "run.mixedPrompt": "Sadece bazı satırlarda prompt var ($ / # / %). İlk prompt'tan önceki satırlar korundu, prompt'tan sonraki satırlar çıktı sayılıp atlandı. Gönderilecek komutu kontrol et.",
     "preview.titleFile": "Önizleme: {name}",
     "preview.title": "Önizleme",
     "preview.openSource": "Kaynağı yanda aç",
@@ -350,7 +380,7 @@ const STRINGS = {
     "set.previewScriptsDesc": "Önizleme ayrı, yalıtılmış bir çerçevede açılır; sayfadaki kod Obsidian'a ve dosyalarına erişemez. Kapalıyken sayfa sadece HTML/CSS olarak gösterilir. Önizleme penceresindeki ⚡ düğmesiyle tek tek de değiştirebilirsin.",
     "set.hRun": "Terminalde çalıştırma",
     "set.confirmRun": "Her komutta önce onay sor",
-    "set.confirmRunDesc": "Kapalıyken tek satırlık, tehlikesiz komutlar direkt çalışır. Çok satırlı, <...> yer tutuculu ya da rm / reboot / kubectl delete / power cycle gibi komutlarda her zaman sorulur.",
+    "set.confirmRunDesc": "Kapalıyken tek satırlık, tehlikesiz komutlar direkt çalışır. Çok satırlı, <...> yer tutuculu, dil etiketi olmayan bloklarda ya da rm / reboot / kubectl delete / power cycle gibi komutlarda her zaman sorulur.",
     "set.focusTerminal": "Çalıştırınca terminale geç",
     "set.focusTerminalDesc": "sudo şifresi gibi bir şey sorarsa yazabilmen için açık kalması iyi olur.",
     "set.fileExts": "Obsidian'da gösterilecek uzantılar",
@@ -646,29 +676,29 @@ function detectLanguage(raw, opts) {
 
   let counted = 0, shell = 0, yamlL = 0, yamlProse = 0, iniL = 0, tomlL = 0, prose = 0, md = 0;
   for (const l of nonEmpty) {
-    const t = l.trim();
-    if (/^#{1,6}\s+\S/.test(t) && /^#{1,6}\s+[A-ZÇĞİÖŞÜa-zçğıöşü]/.test(t) && t.split(/\s+/).length >= 3 && !/[=$|;]/.test(t)) md += 1;
-    if (/^(#|\/\/|--|;)/.test(t)) continue;
+    const s = l.trim();
+    if (/^#{1,6}\s+\S/.test(s) && /^#{1,6}\s+[A-ZÇĞİÖŞÜa-zçğıöşü]/.test(s) && s.split(/\s+/).length >= 3 && !/[=$|;]/.test(s)) md += 1;
+    if (/^(#|\/\/|--|;)/.test(s)) continue;
     counted++;
-    const isShell = SHELL_LINE_RE.test(t) || SHELL_LINE_EXTRA.some((re) => re.test(t));
+    const isShell = SHELL_LINE_RE.test(s) || SHELL_LINE_EXTRA.some((re) => re.test(s));
     if (isShell) shell++;
-    const ym = /^(- )?["']?[\w.\-\/@$]+["']?:(\s+(.*))?$/.exec(t);
-    if (ym || /^- \S/.test(t) || t === "---") {
+    const ym = /^(- )?["']?[\w.\-\/@$]+["']?:(\s+(.*))?$/.exec(s);
+    if (ym || /^- \S/.test(s) || s === "---") {
       yamlL++;
       if (ym && ym[3] && ym[3].split(/\s+/).length >= 4 && !/^["'[{|>]/.test(ym[3])) yamlProse++;
     }
-    if (/^\[[^\]]+\]$/.test(t)) {
+    if (/^\[[^\]]+\]$/.test(s)) {
       iniL++;
       tomlL++;
-    } else if (/^[\w.\-]+\s*=\s*\S/.test(t)) {
+    } else if (/^[\w.\-]+\s*=\s*\S/.test(s)) {
       iniL++;
-      if (/^[\w.\-]+\s*=\s*("|'|\[|\{|\d|true\b|false\b)/.test(t)) tomlL++;
+      if (/^[\w.\-]+\s*=\s*("|'|\[|\{|\d|true\b|false\b)/.test(s)) tomlL++;
     }
-    const words = t.split(/\s+/).length;
-    if (!isShell && words >= 5 && !/[;{}()=<>[\]$|\\`]|\s-{1,2}\w|\/\w/.test(t) && /[a-zçğıöşü]{3,}/i.test(t)) prose++;
-    if (/^([-*+]|\d+\.)\s+(\[[ xX]\]\s+)?[^\s:]+\s+\S+\s+\S+/.test(t) && !/[;{}=$|]/.test(t)) md += 1;
-    if (/\[[^\]]+\]\((https?:|\.?\/|#)[^)]*\)|\[\[[^\]]+\]\]|\*\*[^*\s][^*]*\*\*|^>\s+\S/.test(t)) md += 2;
-    if (/^\|.*\|$/.test(t)) md += 1;
+    const words = s.split(/\s+/).length;
+    if (!isShell && words >= 5 && !/[;{}()=<>[\]$|\\`]|\s-{1,2}\w|\/\w/.test(s) && /[a-zçğıöşü]{3,}/i.test(s)) prose++;
+    if (/^([-*+]|\d+\.)\s+(\[[ xX]\]\s+)?[^\s:]+\s+\S+\s+\S+/.test(s) && !/[;{}=$|]/.test(s)) md += 1;
+    if (/\[[^\]]+\]\((https?:|\.?\/|#)[^)]*\)|\[\[[^\]]+\]\]|\*\*[^*\s][^*]*\*\*|^>\s+\S/.test(s)) md += 2;
+    if (/^\|.*\|$/.test(s)) md += 1;
   }
   if (!counted) return null;
 
@@ -729,15 +759,15 @@ function blockAt(ad, lineNo) {
     i++;
   }
   for (; i < n; i++) {
-    const t = ad.line(i);
+    const ln = ad.line(i);
     if (!open) {
-      const f = parseFence(t);
+      const f = parseFence(ln);
       if (f) {
         open = f;
         start = i;
       }
       if (i >= lineNo && !open) return null;
-    } else if (isCloseFence(t, open)) {
+    } else if (isCloseFence(ln, open)) {
       if (lineNo >= start && lineNo <= i) return makeBlock(ad, open, start, i);
       open = null;
       if (i >= lineNo) return null;
@@ -751,8 +781,8 @@ function makeBlock(ad, f, start, end) {
   const last = end < 0 ? ad.count - 1 : end - 1;
   const lines = [];
   for (let i = start + 1; i <= last; i++) {
-    const t = ad.line(i);
-    lines.push(f.indent && t.startsWith(f.indent) ? t.slice(f.indent.length) : t);
+    const ln = ad.line(i);
+    lines.push(f.indent && ln.startsWith(f.indent) ? ln.slice(f.indent.length) : ln);
   }
   return { start, end, indent: f.indent, fence: f.fence, lang: f.lang, rest: f.rest, code: lines.join("\n") };
 }
@@ -907,14 +937,14 @@ class SaveModal extends Modal {
     contentEl.addClass("sc-save");
 
     let nameInput;
-    new Setting(contentEl).setName(t("common.fileName")).addText((t) => {
-      nameInput = t;
-      t.setValue(this.name).onChange((v) => (this.name = v));
-      t.inputEl.addClass("sc-wide");
+    new Setting(contentEl).setName(t("common.fileName")).addText((txt) => {
+      nameInput = txt;
+      txt.setValue(this.name).onChange((v) => (this.name = v));
+      txt.inputEl.addClass("sc-wide");
       setTimeout(() => {
-        t.inputEl.focus();
+        txt.inputEl.focus();
         const dot = this.name.lastIndexOf(".");
-        t.inputEl.setSelectionRange(0, dot > 0 ? dot : this.name.length);
+        txt.inputEl.setSelectionRange(0, dot > 0 ? dot : this.name.length);
       }, 0);
     });
     new Setting(contentEl).setName(t("common.language")).addDropdown((d) => {
@@ -933,7 +963,7 @@ class SaveModal extends Modal {
     new Setting(contentEl)
       .setName(t("common.folder"))
       .setDesc(t("save.folderDesc"))
-      .addText((t) => t.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
+      .addText((txt) => txt.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
     if (this.opts.canLink) {
       new Setting(contentEl).setName(t("save.inNote")).addDropdown((d) =>
         d
@@ -992,16 +1022,16 @@ class NewFileModal extends Modal {
   onOpen() {
     const { contentEl } = this;
     this.titleEl.setText(t("newFile.title"));
-    new Setting(contentEl).setName(t("common.fileName")).addText((t) => {
-      t.setPlaceholder(t("newFile.placeholder")).onChange((v) => (this.name = v));
-      t.inputEl.addClass("sc-wide");
-      setTimeout(() => t.inputEl.focus(), 0);
+    new Setting(contentEl).setName(t("common.fileName")).addText((txt) => {
+      txt.setPlaceholder(t("newFile.placeholder")).onChange((v) => (this.name = v));
+      txt.inputEl.addClass("sc-wide");
+      setTimeout(() => txt.inputEl.focus(), 0);
     });
     new Setting(contentEl).setName(t("common.language")).setDesc(t("newFile.langDesc")).addDropdown((d) => {
       for (const l of LANGS) if (this.plugin.isCodeExt(l.ext)) d.addOption(l.id, l.label);
       d.setValue(this.lang).onChange((v) => (this.lang = v));
     });
-    new Setting(contentEl).setName(t("common.folder")).addText((t) => t.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
+    new Setting(contentEl).setName(t("common.folder")).addText((txt) => txt.setValue(this.folder).onChange((v) => (this.folder = v.trim())));
     const err = contentEl.createDiv({ cls: "sc-error" });
     const go = async () => {
       let name = this.name.trim().replace(/[\\:*?"<>|]/g, "-");
@@ -1033,37 +1063,122 @@ function isShellLang(lang) {
   return SHELL_LANGS.has(String(lang || "").toLowerCase());
 }
 
-const PROMPT_RE = /^\s*(?:\[[^\]\n]+\][$#]|[\w.-]+@[\w.-]+(?::[^$#\n]*)?\s?[$#]|\$)\s+/;
+const PROMPT_RE = /^\s*(?:\([^()\n]+\)\s*)?(?:\[[^\]\n]+\]\s?[$#%]\s*|[\w.-]+@[\w.-]+(?::[^$#%\n]*|\s+[^\s$#%]+)?\s?[$#%]\s*|(?:ba|z|k|da|fi)?sh-\d+(?:\.\d+)*[$#%]\s+|PS(?:\s+[^>\n]*)?>\s*|➜\s+\S+(?:\s+git:\([^)\n]*\))?(?:\s+✗)?\s+|[❯›]\s+|[$%]\s+)/;
 
-function cleanCommands(code) {
+function parseCommands(code) {
   const lines = String(code).replace(/\r\n?/g, "\n").split("\n");
-  const hasPrompt = lines.some((l) => PROMPT_RE.test(l));
-  let out = hasPrompt ? lines.filter((l) => PROMPT_RE.test(l)).map((l) => l.replace(PROMPT_RE, "")) : lines.slice();
+  const firstPrompt = lines.findIndex((l) => PROMPT_RE.test(l));
+  const out = [];
+  let mixed = false;
+  let cont = false;
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    let keep = null;
+    if (firstPrompt < 0) keep = l;
+    else if (PROMPT_RE.test(l)) keep = l.replace(PROMPT_RE, "");
+    else if (cont) keep = l.replace(/^\s*>\s?/, "");
+    else if (l.trim()) {
+      mixed = true;
+      if (i < firstPrompt) keep = l;
+    }
+    if (keep !== null) out.push(keep);
+    cont = keep !== null && /\\$/.test(keep);
+  }
   while (out.length && !out[0].trim()) out.shift();
   while (out.length && !out[out.length - 1].trim()) out.pop();
-  return out.join("\n");
+  return { cmd: out.join("\n"), mixed };
+}
+
+function cleanCommands(code) {
+  return parseCommands(code).cmd;
 }
 
 const PLACEHOLDER_RE = /<[A-Za-zÇĞİÖŞÜçğıöşü][\w.\-çğıöşüÇĞİÖŞÜ]*(?:[ -][\w.\-çğıöşüÇĞİÖŞÜ]+)*>/g;
+const HTML_TAGS = new Set(
+  ("html head body div span p br hr ul ol li dl dt dd table thead tbody tfoot tr td th caption colgroup col h1 h2 h3 h4 h5 h6 " +
+    "img script style link meta title base form input button select option optgroup textarea label fieldset legend section article " +
+    "header footer nav main aside pre code blockquote iframe svg canvas video audio source track picture figure figcaption details " +
+    "summary dialog noscript template slot small sub sup kbd abbr em strong b i u s q a mark time data var cite dfn samp ins del " +
+    "bdi bdo wbr ruby rt rp address hgroup center font tt big strike marquee nobr object embed param map area meter progress " +
+    "output datalist search menu").split(" ")
+);
+const HTML_ONLY_TAGS = new Set(
+  ("html head div span p br hr ul ol li dl dt dd thead tbody tfoot tr td th colgroup h1 h2 h3 h4 h5 h6 meta textarea fieldset " +
+    "legend article nav aside pre blockquote iframe svg canvas figure figcaption noscript sub sup kbd abbr em strong wbr bdi bdo " +
+    "rt rp hgroup center tt strike marquee nobr optgroup datalist").split(" ")
+);
+const HTML_CONTEXT_RE = /<\/[A-Za-z][\w-]*\s*>|<[A-Za-z][\w-]*(?:\s[^<>]*)?\/>|<!doctype\b/i;
+
+function quotedRanges(s) {
+  const ranges = [];
+  let q = null;
+  let start = 0;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (q === "'") {
+      if (c === "'") {
+        ranges.push([start, i]);
+        q = null;
+      }
+    } else if (c === "\\") i++;
+    else if (q === '"') {
+      if (c === '"') {
+        ranges.push([start, i]);
+        q = null;
+      }
+    } else if (c === "'" || c === '"') {
+      q = c;
+      start = i;
+    }
+  }
+  return ranges;
+}
+
 function findPlaceholders(cmd) {
-  return Array.from(new Set((cmd.match(PLACEHOLDER_RE) || []).filter((p) => !/^<</.test(p))));
+  const s = String(cmd);
+  const re = new RegExp(PLACEHOLDER_RE.source, "g");
+  const all = [];
+  let m;
+  while ((m = re.exec(s))) all.push({ text: m[0], index: m.index, name: m[0].slice(1, -1).toLowerCase() });
+  if (!all.length) return [];
+  const quoted = quotedRanges(s);
+  const html = HTML_CONTEXT_RE.test(s) || all.some((p) => HTML_ONLY_TAGS.has(p.name));
+  const found = all.filter((p) => {
+    if (s[p.index - 1] === "<") return false;
+    if (HTML_TAGS.has(p.name) && (html || HTML_ONLY_TAGS.has(p.name))) return false;
+    return !quoted.some(([a, b]) => p.index > a && p.index < b);
+  });
+  return Array.from(new Set(found.map((p) => p.text)));
 }
 
 const DANGER = [
-  [/\brm\s+(-\w*[rf]\w*\s+)*\S/, "danger.rm"],
+  [/\brm\s+(-\w*[rf]\w*\s+)*\S|\bxargs\s+(?:-\S+\s+)*rm\b/, "danger.rm"],
+  [/\bfind\b[^\n|;&]{0,200}\s-(?:delete\b|exec(?:dir)?\s+(?:\S*\/)?rm\b)/, "danger.findDelete"],
+  [/\bmv\b(?:\s+[^\s|;&<>]+){0,20}\s+\/dev\/null\b/, "danger.mvNull"],
+  [/\b(?:shred|srm)\b|\btruncate\s+(?:-\S+\s+)*(?:-s\s*|--size[= ]?)0\b/, "danger.wipeFile"],
   [/\b(reboot|shutdown|poweroff|halt)\b|\binit\s+[06]\b/, "danger.reboot"],
   [/\bipmitool\b.*\bpower\s+(cycle|off|reset|soft)\b|\bchassis\s+power\b/, "danger.power"],
-  [/\b(mkfs(\.\w+)?|wipefs|fdisk|parted|sgdisk)\b|\bdd\s+if=/, "danger.disk"],
-  [/\bkubectl\s+(delete|drain|cordon|replace\s+--force)\b/, "danger.k8s"],
+  [/\b(mkfs(\.\w+)?|wipefs|fdisk|parted|sgdisk)\b|\bdd\s+if=|\bdd\b[^\n|;&]{0,200}\sof=\/dev\/|\bdiskutil\s+(?:erase\w*|zeroDisk|randomDisk|secureErase|partitionDisk|reformat|apfs\s+(?:delete|erase)\w*)\b/, "danger.disk"],
+  [/>\s*\/dev\/(?:sd|hd|vd|xvd|nvme|mmcblk|disk|rdisk)\w*/, "danger.rawDisk"],
+  [/(?:^|[^>&0-9])>\s*\/(?:etc|boot|bin|sbin|usr|lib|System)\//m, "danger.sysFile"],
+  [/([\w:.]{1,40})\s*\(\s*\)\s*\{[^}]{0,40}\1\s*\|\s*\1\s*&/, "danger.forkBomb"],
+  [/\b(?:curl|wget|fetch)\b[^\n;&]{0,200}\|\s*(?:sudo\s+(?:-\S+\s+)*)?(?:env\s+)?(?:(?:ba|z|da|k|fi)?sh|python\d*(?:\.\d+)?|perl|ruby|node)\b|\b(?:(?:ba|z|k)?sh|source)\s+(?:-\S+\s+)*<\(\s*(?:curl|wget)\b|\b(?:(?:ba|z|k)?sh)\s+-c\s+["']?\$\(\s*(?:curl|wget)\b/, "danger.pipeShell"],
+  [/\b(?:kubectl|kubecolor|oc)\b[^\n|;&]{0,200}?\s(?:delete|drain|cordon|replace\s+--force)(?=\s|$)|(?:^|[;&|(]|\bsudo\s)\s*k\s+[^\n|;&]{0,200}?\b(?:delete|drain|cordon)(?=\s|$)/m, "danger.k8s"],
   [/\bhelm\s+(uninstall|delete|rollback)\b/, "danger.helm"],
   [/\bdctl\b.*\b(delete|remove|destroy|reset|configure\s+--master|bundle\s+distribution\s+start|upgrade\s+(\w+\s+)?start)\b/, "danger.dctl"],
-  [/\bdocker\s+(rm|rmi|system\s+prune|volume\s+rm)\b|\b(podman|crictl)\s+(rm|rmi)\b/, "danger.container"],
+  [/\bdocker\s+(rm|rmi|system\s+prune|volume\s+rm)\b|\bdocker\s+(?:container|image|volume|network|system|builder|buildx)\s+(?:rm|prune)\b|\bdocker(?:-compose|\s+compose)\b[^\n|;&]{0,200}\sdown\b[^\n|;&]{0,200}\s(?:-v|--volumes|--rmi)\b|\b(podman|crictl)\s+(rm|rmi)\b/, "danger.container"],
+  [/\b(?:terraform|tofu|terragrunt)\b[^\n|;&]{0,200}\s(?:destroy\b|apply\b[^\n|;&]{0,200}\s-destroy\b)|\bpulumi\s+(?:destroy|down)\b/, "danger.iac"],
+  [/\bgcloud\b[^\n|;&]{0,200}\s(?:delete|remove)(?=\s|$)|\bgsutil\b[^\n|;&]{0,200}\s(?:rm|rb)\b|\baws\b[^\n|;&]{0,200}\s(?:delete-[\w-]+|terminate-instances|rb|rm)(?=\s|$)|\baz\b[^\n|;&]{0,200}\sdelete(?=\s|$)/, "danger.cloud"],
+  [/\bgit\b[^\n|;&]{0,200}?\spush\b[^\n|;&]{0,200}\s(?:--force(?:-with-lease|-if-includes)?\b|-[a-zA-Z]*f[a-zA-Z]*\b|\+\S)/, "danger.gitForce"],
+  [/\bgit\b[^\n|;&]{0,200}?\sreset\b[^\n|;&]{0,200}\s--hard\b|\bgit\b[^\n|;&]{0,200}?\sclean\b[^\n|;&]{0,200}\s(?:-[a-zA-Z]*f|--force\b)/, "danger.gitDiscard"],
+  [/\b(?:drop\s+(?:table|database|schema)|truncate\s+table)\b|\bdropdb\b|\.dropDatabase\s*\(/i, "danger.sql"],
   [/\bsystemctl\s+(stop|restart|disable|mask|kill)\b/, "danger.service"],
-  [/\b(kill\s+-9|killall|pkill)\b/, "danger.kill"],
-  [/\b(iptables\s+-F|nft\s+flush|firewall-cmd\s+.*--remove)\b/, "danger.firewall"],
+  [/\b(kill\s+-9|killall|pkill)\b|\bkill\s+(?:-s\s+|-)(?:SIG)?KILL\b/, "danger.kill"],
+  [/\bkill\s+(?:-\S+\s+)+-1(?=\s*(?:$|[;&|)]))/m, "danger.killAll"],
+  [/\bcrontab\b[^\n|;&]{0,200}\s-\w*r/, "danger.crontab"],
+  [/\b(iptables\s+-F|nft\s+flush|firewall-cmd\s+.*--remove)\b|\bip6?tables\b[^\n|;&]{0,200}\s(?:--flush|-X|-P\s+\w+\s+DROP)\b|\bufw\s+(?:disable|reset)\b|\bpfctl\s+-d\b/, "danger.firewall"],
   [/\b(userdel|passwd|chpasswd)\b/, "danger.user"],
-  [/\bchmod\s+(-R\s+)?777\b|\bchown\s+-R\b/, "danger.perms"],
-  [/>\s*\/dev\/(sd|nvme|vd)\w*/, "danger.rawDisk"],
+  [/\bchmod\s+(-R\s+)?777\b|\bchown\s+-R\b|\bchmod\b[^\n|;&]{0,200}\s(?:0?777|a\+rwx)(?=\s|$)|\bch(?:own|grp)\b[^\n|;&]{0,200}\s(?:-\w*R\w*|--recursive)\b|\bchmod\b[^\n|;&]{0,200}\s(?:-\w*R\w*|--recursive)\b[^\n|;&]{0,200}\s\/(?=\s|$)/m, "danger.perms"],
   [/\b(pgbackrest\s+.*\b(restore|stanza-delete)|patronictl\s+(failover|switchover|remove|reinit))\b/, "danger.db"],
   [/\brpm\s+(-e|--erase|-U|-i)|\b(yum|dnf|apt(-get)?)\s+(remove|erase|purge|install|update|upgrade)\b/, "danger.pkg"],
 ];
@@ -1087,6 +1202,10 @@ class RunModal extends Modal {
     this.titleEl.setText(this.opts.title || t("common.runInTerminal"));
     contentEl.addClass("sc-run");
 
+    if (this.opts.notes && this.opts.notes.length) {
+      const noteEl = contentEl.createDiv({ cls: "sc-run-note" });
+      this.opts.notes.forEach((n) => noteEl.createDiv({ text: n }));
+    }
     const warnEl = contentEl.createDiv({ cls: "sc-run-warn" });
     const phEl = contentEl.createDiv({ cls: "sc-run-ph" });
     const ta = contentEl.createEl("textarea", { cls: "sc-run-input" });
@@ -1184,14 +1303,14 @@ function getPrism() {
 }
 
 function flattenTokens(tokens, out, pos, classes) {
-  for (const t of tokens) {
-    if (typeof t === "string") {
-      if (classes && t.length) out.push([pos, pos + t.length, classes]);
-      pos += t.length;
+  for (const tok of tokens) {
+    if (typeof tok === "string") {
+      if (classes && tok.length) out.push([pos, pos + tok.length, classes]);
+      pos += tok.length;
     } else {
-      let cls = (classes ? classes + " " : "token ") + t.type;
-      if (t.alias) cls += " " + (Array.isArray(t.alias) ? t.alias.join(" ") : t.alias);
-      const content = Array.isArray(t.content) ? t.content : [t.content];
+      let cls = (classes ? classes + " " : "token ") + tok.type;
+      if (tok.alias) cls += " " + (Array.isArray(tok.alias) ? tok.alias.join(" ") : tok.alias);
+      const content = Array.isArray(tok.content) ? tok.content : [tok.content];
       pos = flattenTokens(content, out, pos, cls);
     }
   }
@@ -1657,15 +1776,15 @@ function buildEditorExtension(plugin) {
         for (let i = startLine; i <= doc.lines; i++) {
           const line = doc.line(i);
           if (line.from > to) break;
-          const t = line.text;
-          if (t.length > 400 || (t.indexOf("`") < 0 && t.indexOf("~") < 0)) continue;
+          const txt = line.text;
+          if (txt.length > 400 || (txt.indexOf("`") < 0 && txt.indexOf("~") < 0)) continue;
           if (!open) {
-            const f = parseFence(t);
+            const f = parseFence(txt);
             if (f) {
               open = f;
               if (line.to >= from) b.add(line.to, line.to, Decoration.widget({ widget: new ToolsWidget(f.lang, line.from), side: 1 }));
             }
-          } else if (isCloseFence(t, open)) open = null;
+          } else if (isCloseFence(txt, open)) open = null;
         }
         return b.finish();
       }
@@ -1886,31 +2005,36 @@ module.exports = class EcuCodekit extends Plugin {
   }
 
   async sendToTerminal(cmd, enter) {
-    const t = await this.terminalSession();
-    if (!t) return new Notice(t("notice.noTerminal"));
+    const term = await this.terminalSession();
+    if (!term) return new Notice(t("notice.noTerminal"));
     const text = cmd.replace(/\r\n?/g, "\n").replace(/\n/g, "\r") + (enter ? "\r" : "");
-    t.session.pty.write(text);
+    term.session.pty.write(text);
     if (this.settings.focusTerminal || !enter) {
-      if (t.qt && t.qt.focusTerminal) t.qt.focusTerminal(t.leaf);
-      else this.app.workspace.setActiveLeaf(t.leaf, { focus: true });
+      if (term.qt && term.qt.focusTerminal) term.qt.focusTerminal(term.leaf);
+      else this.app.workspace.setActiveLeaf(term.leaf, { focus: true });
     }
   }
 
   runInTerminal(code, opts) {
     opts = opts || {};
-    const cmd = cleanCommands(code);
+    const parsed = parseCommands(code);
+    const cmd = parsed.cmd;
     if (!cmd.trim()) return new Notice(t("notice.noCommand"));
     const lines = cmd.split("\n").filter((l) => l.trim() && !/^\s*#/.test(l));
     const risky = findDangers(cmd).length > 0 || findPlaceholders(cmd).length > 0;
-    if (!opts.force && !risky && lines.length <= 1 && !this.settings.confirmRun) return this.sendToTerminal(cmd, true);
-    new RunModal(this, { cmd, title: opts.title, onRun: (c, enter) => this.sendToTerminal(c, enter) }).open();
+    const notes = [];
+    if (opts.untagged) notes.push(t("run.untagged"));
+    if (parsed.mixed) notes.push(t("run.mixedPrompt"));
+    if (!opts.force && !notes.length && !risky && lines.length <= 1 && !this.settings.confirmRun) return this.sendToTerminal(cmd, true);
+    new RunModal(this, { cmd, notes, title: opts.title, onRun: (c, enter) => this.sendToTerminal(c, enter) }).open();
   }
 
   runCursorLine(editor) {
     const sel = editor.getSelection();
     const text = sel.trim() ? sel : editor.getLine(editor.getCursor().line);
     if (!text.trim() || /^\s*(```|~~~)/.test(text)) return new Notice(t("notice.noLine"));
-    this.runInTerminal(text);
+    const blk = blockAt(editorAd(editor), editor.getCursor().line);
+    this.runInTerminal(text, { untagged: !!blk && !blk.lang });
   }
 
   onPaste(evt, editor, info) {
@@ -1984,18 +2108,18 @@ module.exports = class EcuCodekit extends Plugin {
   }
 
   async pastePlain(editor) {
-    const t = await navigator.clipboard.readText();
-    editor.replaceSelection(t);
+    const clip = await navigator.clipboard.readText();
+    editor.replaceSelection(clip);
   }
 
   async pasteAsCode(editor) {
-    const t = await navigator.clipboard.readText();
-    if (!t.trim()) return new Notice(t("notice.clipboardEmpty"));
-    const res = detectLanguage(t, { minScore: 1 });
+    const clip = await navigator.clipboard.readText();
+    if (!clip.trim()) return new Notice(t("notice.clipboardEmpty"));
+    const res = detectLanguage(clip, { minScore: 1 });
     const insert = (lang) => {
       const from = editor.getCursor("from");
       const before = editor.getLine(from.line).slice(0, from.ch);
-      let text = buildBlock(dedent(t), this.fenceId(lang), before.trim() ? "" : before);
+      let text = buildBlock(dedent(clip), this.fenceId(lang), before.trim() ? "" : before);
       if (before.trim()) text = "\n" + text;
       editor.replaceSelection(text + "\n");
     };
@@ -2078,7 +2202,7 @@ module.exports = class EcuCodekit extends Plugin {
     if (!blk) return;
     if (action === "lang") this.openLangModal(ad, blk);
     else if (action === "copy") this.copyBlock(blk);
-    else if (action === "run") this.runInTerminal(blk.code);
+    else if (action === "run") this.runInTerminal(blk.code, { untagged: !blk.lang });
     else if (action === "save") {
       const f = this.app.workspace.getActiveFile();
       this.saveBlock(ad, blk, f ? f.path : "");
@@ -2106,7 +2230,7 @@ module.exports = class EcuCodekit extends Plugin {
             .setTitle(t("menu.runBlock"))
             .setIcon("play")
             .setSection("ecu-codekit")
-            .onClick(() => this.runInTerminal(blk.code))
+            .onClick(() => this.runInTerminal(blk.code, { untagged: !blk.lang }))
         );
         const onCode = cur.line > blk.start && (blk.end < 0 || cur.line < blk.end);
         if (onCode && (editor.somethingSelected() || blk.code.split("\n").length > 1))
@@ -2194,7 +2318,7 @@ module.exports = class EcuCodekit extends Plugin {
         });
       };
       button("copy", t("common.copy"), () => this.copyBlock({ code: text(), lang }));
-      if (isShellLang(lang)) button("play", t("common.runInTerminal"), () => this.runInTerminal(text()));
+      if (isShellLang(lang)) button("play", t("common.runInTerminal"), () => this.runInTerminal(text(), { untagged: !lang }));
       button("save", t("common.saveAsFile"), () => {
         const l = lang || (detectLanguage(text(), { minScore: 1 }) || {}).lang || "text";
         new SaveModal(this, { code: text(), lang: l, sourcePath: ctx.sourcePath, canLink: false }).open();
@@ -2304,7 +2428,7 @@ module.exports = class EcuCodekit extends Plugin {
       editorCheckCallback: (checking, editor) => {
         const blk = inBlock(editor);
         if (!blk || !isShellLang(blk.lang)) return false;
-        if (!checking) this.runInTerminal(blk.code);
+        if (!checking) this.runInTerminal(blk.code, { untagged: !blk.lang });
         return true;
       },
     });
@@ -2353,11 +2477,11 @@ class EcuCodekitSettings extends PluginSettingTab {
     new Setting(containerEl)
       .setName(t("set.autoWrap"))
       .setDesc(t("set.autoWrapDesc"))
-      .addToggle((t) => t.setValue(p.settings.autoWrap).onChange(async (v) => ((p.settings.autoWrap = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.autoWrap).onChange(async (v) => ((p.settings.autoWrap = v), await save())));
     new Setting(containerEl)
       .setName(t("set.singleLine"))
       .setDesc(t("set.singleLineDesc"))
-      .addToggle((t) => t.setValue(p.settings.singleLine).onChange(async (v) => ((p.settings.singleLine = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.singleLine).onChange(async (v) => ((p.settings.singleLine = v), await save())));
     new Setting(containerEl)
       .setName(t("set.sensitivity"))
       .setDesc(t("set.sensitivityDesc"))
@@ -2382,22 +2506,22 @@ class EcuCodekitSettings extends PluginSettingTab {
     new Setting(containerEl)
       .setName(t("set.notify"))
       .setDesc(t("set.notifyDesc"))
-      .addToggle((t) => t.setValue(p.settings.notify).onChange(async (v) => ((p.settings.notify = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.notify).onChange(async (v) => ((p.settings.notify = v), await save())));
 
     new Setting(containerEl).setName(t("set.hView")).setHeading();
     new Setting(containerEl)
       .setName(t("set.chips"))
       .setDesc(t("set.chipsDesc"))
-      .addToggle((t) => t.setValue(p.settings.chips).onChange(async (v) => ((p.settings.chips = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.chips).onChange(async (v) => ((p.settings.chips = v), await save())));
     new Setting(containerEl)
       .setName(t("set.readingHeader"))
-      .addToggle((t) => t.setValue(p.settings.readingHeader).onChange(async (v) => ((p.settings.readingHeader = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.readingHeader).onChange(async (v) => ((p.settings.readingHeader = v), await save())));
 
     new Setting(containerEl).setName(t("set.hFiles")).setHeading();
     new Setting(containerEl)
       .setName(t("set.codeFolder"))
       .setDesc(t("set.codeFolderDesc"))
-      .addText((t) => t.setValue(p.settings.codeFolder).onChange(async (v) => ((p.settings.codeFolder = v.trim()), await save())));
+      .addText((txt) => txt.setValue(p.settings.codeFolder).onChange(async (v) => ((p.settings.codeFolder = v.trim()), await save())));
     new Setting(containerEl)
       .setName(t("set.saveLinkMode"))
       .addDropdown((d) =>
@@ -2422,24 +2546,24 @@ class EcuCodekitSettings extends PluginSettingTab {
     new Setting(containerEl)
       .setName(t("set.previewScripts"))
       .setDesc(t("set.previewScriptsDesc"))
-      .addToggle((t) => t.setValue(p.settings.previewScripts).onChange(async (v) => ((p.settings.previewScripts = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.previewScripts).onChange(async (v) => ((p.settings.previewScripts = v), await save())));
 
     new Setting(containerEl).setName(t("set.hRun")).setHeading();
     new Setting(containerEl)
       .setName(t("set.confirmRun"))
       .setDesc(t("set.confirmRunDesc"))
-      .addToggle((t) => t.setValue(p.settings.confirmRun).onChange(async (v) => ((p.settings.confirmRun = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.confirmRun).onChange(async (v) => ((p.settings.confirmRun = v), await save())));
     new Setting(containerEl)
       .setName(t("set.focusTerminal"))
       .setDesc(t("set.focusTerminalDesc"))
-      .addToggle((t) => t.setValue(p.settings.focusTerminal).onChange(async (v) => ((p.settings.focusTerminal = v), await save())));
+      .addToggle((tg) => tg.setValue(p.settings.focusTerminal).onChange(async (v) => ((p.settings.focusTerminal = v), await save())));
     new Setting(containerEl)
       .setName(t("set.fileExts"))
       .setDesc(t("set.fileExtsDesc"))
-      .addTextArea((t) => {
-        t.setValue(p.settings.fileExts).onChange(async (v) => ((p.settings.fileExts = v), await save()));
-        t.inputEl.rows = 3;
-        t.inputEl.addClass("sc-wide");
+      .addTextArea((ta) => {
+        ta.setValue(p.settings.fileExts).onChange(async (v) => ((p.settings.fileExts = v), await save()));
+        ta.inputEl.rows = 3;
+        ta.inputEl.addClass("sc-wide");
       })
       .addExtraButton((b) =>
         b
@@ -2460,4 +2584,4 @@ class EcuCodekitSettings extends PluginSettingTab {
 }
 
 module.exports.detectLanguage = detectLanguage;
-module.exports._internals = { blockAt, parseFence, dedent, buildBlock, fenceFor, langOf, langFromExt, cleanCommands, findPlaceholders, findDangers, flattenTokens, isShellLang };
+module.exports._internals = { blockAt, parseFence, dedent, buildBlock, fenceFor, langOf, langFromExt, cleanCommands, parseCommands, findPlaceholders, findDangers, flattenTokens, isShellLang };
