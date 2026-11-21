@@ -1,0 +1,10 @@
+{
+  "id": "ecu-codekit",
+  "name": "ecu-codekit",
+  "version": "1.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Code in your notes: detects pasted code, runs commands in the terminal, edits code files and previews HTML.",
+  "author": "Eren Can Ucar",
+  "isDesktopOnly": false,
+  "authorUrl": "https://github.com/erencanucarr"
+}
