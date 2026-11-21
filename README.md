@@ -4,7 +4,7 @@ Better code in your Obsidian notes: paste code and it lands in the right code bl
 run commands straight from a note, edit code files with highlighting and preview HTML
 side by side.
 
-![Code blocks with copy, run, language and save buttons](docs/code-blocks.png)
+![Pasting commands turns them into a code block that runs in the terminal](docs/paste-run.gif)
 
 ## Features
 
@@ -25,6 +25,8 @@ side by side.
   **Preview beside**. The preview reloads when the file changes, runs in a
   sandbox that can't reach Obsidian or your files, and JavaScript can be switched off.
 - **Save a block as a file** into a folder of your choice, with a link back in the note.
+
+![Code blocks with copy, run, language and save buttons](docs/code-blocks.png)
 
 ![Running a block with placeholders](docs/run-modal.png)
 
