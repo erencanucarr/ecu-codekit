@@ -566,7 +566,7 @@ function proseLine(s) {
   if (letters / w.length < 0.75) return false;
   return /[.!?…]$|,\s/.test(s) || w.some((x) => PROSE_STOP.has(x.toLowerCase().replace(/[.,!?:…]+$/, "")));
 }
-function shellLine(s) {
+function shellLine(s, depth) {
   if (STACK_FRAME_RE.test(s)) return 0;
   if (SHELL_LINE_RE.test(s) || SHELL_LINE_EXTRA.some((re) => re.test(s))) return proseLine(s) ? 0 : 2;
   const m = SHELL_AMBIG_RE.exec(s);
@@ -574,7 +574,7 @@ function shellLine(s) {
   const cmd = m[2];
   const arg = m[3].trim();
   if (m[1] || (cmd === "cd" && !/\s/.test(arg))) return 2;
-  if ((SHELL_ARGS[cmd] && SHELL_ARGS[cmd].test(arg)) || (arg && shellLine(arg) === 2)) return 2;
+  if ((SHELL_ARGS[cmd] && SHELL_ARGS[cmd].test(arg)) || (arg && (depth || 0) < 3 && shellLine(arg, (depth || 0) + 1) === 2)) return 2;
   if (SHELL_SIGNAL_RE.test(m[3]) || /\d/.test(m[3])) return proseLine(s) ? 0 : 2;
   return arg.split(/\s+/).length <= 1 ? 1 : 0;
 }
@@ -620,10 +620,10 @@ const RULES = [
   ["python", /\b(lambda\s+\w*:|f"[^"]*\{|\.append\(|range\(|len\()/, 2, 2],
   [JS_TS, /\b(const|let|var)\s+[\w${}[\],\s]+=/, 3, 3],
   [JS_TS, /=>/, 2, 2],
-  [JS_TS, /\bfunction\s*\*?\s*[\w$]*\s*\(/, 3],
+  [JS_TS, /\bfunction\s*(?:\*\s*)?(?:[\w$]+\s*)?\(/, 3],
   [JS_TS, /\bconsole\.(log|error|warn|info|debug)\(/, 6],
   [JS_TS, /\brequire\(\s*['"][^'"]+['"]\s*\)/, 6],
-  [JS_TS, /^\s*(import\s+[\w{}\s,*$]+\s+from\s+['"]|import\s+['"][^'"]+['"];?$|export\s+(default|const|function|class|async)\b)/m, 6],
+  [JS_TS, /^\s*(import\s[\w{}\s,*$]+\sfrom\s+['"]|import\s+['"][^'"]+['"];?$|export\s+(default|const|function|class|async)\b)/m, 6],
   [JS_TS, /\b(document|window)\.\w+/, 4],
   [JS_TS, /===|!==/, 2],
   [JS_TS, /\.then\(|\bawait\s+[\w.]+\(/, 2],
@@ -694,7 +694,7 @@ const RULES = [
   ["ini", /^\s*\[[\w .-]+\]\s*$/m, 2],
   ["bash", /\$\{\w+[^}]*\}|\$\(\s*[^)]+\)/, 4, 2],
   ["bash", /\|\s*(grep|egrep|awk|sed|sort|uniq|head|tail|wc|xargs|cut|tr|tee|less|jq|column|yq)\b/, 4, 2],
-  ["bash", /^\s*(if\s+\[|then\s*$|fi\s*$|elif\s+\[|for\s+\w+\s+in\b|while\s+(\[|read|true|:)|do\s*$|done\s*$|case\s+.+\s+in\s*$|esac\s*$)/m, 4, 3],
+  ["bash", /^\s*(if\s+\[|then\s*$|fi\s*$|elif\s+\[|for\s+\w+\s+in\b|while\s+(\[|read|true|:)|do\s*$|done\s*$|case\s+\S.*\sin\s*$|esac\s*$)/m, 4, 3],
   ["bash", /^\s*[\w-]+\s*\(\)\s*\{/m, 5],
   ["bash", /(\s2>&1|>\s*\/dev\/null|\s&>\s)/, 4],
   ["bash", /\s-{1,2}[a-zA-Z][\w-]*/, 1, 3],
@@ -721,7 +721,7 @@ function detectLanguage(raw, opts) {
   opts = opts || {};
   const minScore = opts.minScore || 6;
   let text = String(raw == null ? "" : raw).replace(/\r\n?/g, "\n");
-  text = text.replace(/^(?:[ \t]*\n)+/, "").replace(/\s+$/, "");
+  text = text.replace(/^(?:[ \t]*\n)+/, "").trimEnd();
   if (!text.trim()) return null;
   if (/^\s*(```|~~~)/m.test(text)) return null;
 
@@ -1218,16 +1218,18 @@ function parseCommands(code) {
     if (keep !== null) out.push(keep);
     cont = keep !== null && /\\$/.test(keep);
   }
-  while (out.length && !out[0].trim()) out.shift();
-  while (out.length && !out[out.length - 1].trim()) out.pop();
-  return { cmd: out.join("\n"), mixed };
+  let a = 0;
+  let b = out.length;
+  while (a < b && !out[a].trim()) a++;
+  while (b > a && !out[b - 1].trim()) b--;
+  return { cmd: out.slice(a, b).join("\n"), mixed };
 }
 
 function cleanCommands(code) {
   return parseCommands(code).cmd;
 }
 
-const PLACEHOLDER_RE = /<[A-Za-zÇĞİÖŞÜçğıöşü][\w.\-çğıöşüÇĞİÖŞÜ]*(?:[ -][\w.\-çğıöşüÇĞİÖŞÜ]+)*>/g;
+const PLACEHOLDER_RE = /<[A-Za-zÇĞİÖŞÜçğıöşü][\w.\-çğıöşüÇĞİÖŞÜ]*(?: [\w.\-çğıöşüÇĞİÖŞÜ]+)*>/g;
 const HTML_TAGS = new Set(
   ("html head body div span p br hr ul ol li dl dt dd table thead tbody tfoot tr td th caption colgroup col h1 h2 h3 h4 h5 h6 " +
     "img script style link meta title base form input button select option optgroup textarea label fieldset legend section article " +
@@ -1297,7 +1299,7 @@ const DANGER = [
   [/(?:^|[^>&0-9])>\s*\/(?:etc|boot|bin|sbin|usr|lib|System)\//m, "danger.sysFile"],
   [/([\w:.]{1,40})\s*\(\s*\)\s*\{[^}]{0,40}\1\s*\|\s*\1\s*&/, "danger.forkBomb"],
   [/\b(?:curl|wget|fetch)\b[^\n;&]{0,200}\|\s*(?:sudo\s+(?:-\S+\s+)*)?(?:env\s+)?(?:(?:ba|z|da|k|fi)?sh|python\d*(?:\.\d+)?|perl|ruby|node)\b|\b(?:(?:ba|z|k)?sh|source)\s+(?:-\S+\s+)*<\(\s*(?:curl|wget)\b|\b(?:(?:ba|z|k)?sh)\s+-c\s+["']?\$\(\s*(?:curl|wget)\b/, "danger.pipeShell"],
-  [/\b(?:kubectl|kubecolor|oc)\b[^\n|;&]{0,200}?\s(?:delete|drain|cordon|replace\s+--force)(?=\s|$)|(?:^|[;&|(]|\bsudo\s)\s*k\s+[^\n|;&]{0,200}?\b(?:delete|drain|cordon)(?=\s|$)/m, "danger.k8s"],
+  [/\b(?:kubectl|kubecolor|oc)\b[^\n|;&]{0,200}?\s(?:delete|drain|cordon|replace\s+--force)(?=\s|$)|(?:^|[;&|(]|\bsudo\s)[ \t]*k\s+[^\n|;&]{0,200}?\b(?:delete|drain|cordon)(?=\s|$)/m, "danger.k8s"],
   [/\bhelm\s+(uninstall|delete|rollback)\b/, "danger.helm"],
   [/\bdctl\b.*\b(delete|remove|destroy|reset|configure\s+--master|bundle\s+distribution\s+start|upgrade\s+(\w+\s+)?start)\b/, "danger.dctl"],
   [/\bdocker\s+(rm|rmi|system\s+prune|volume\s+rm)\b|\bdocker\s+(?:container|image|volume|network|system|builder|buildx)\s+(?:rm|prune)\b|\bdocker(?:-compose|\s+compose)\b[^\n|;&]{0,200}\sdown\b[^\n|;&]{0,200}\s(?:-v|--volumes|--rmi)\b|\b(podman|crictl)\s+(rm|rmi)\b/, "danger.container"],
@@ -1398,7 +1400,7 @@ class RunModal extends Modal {
       }
     });
     const go = (enter) => {
-      const cmd = ta.value.replace(/\s+$/, "");
+      const cmd = ta.value.trimEnd();
       if (!cmd.trim()) return;
       this.close();
       this.opts.onRun(cmd, enter);
@@ -2452,7 +2454,7 @@ module.exports = class EcuCodekit extends Plugin {
     }
     const from = editor.getCursor("from");
     const before = editor.getLine(from.line).slice(0, from.ch);
-    let text = buildBlock(content.replace(/\s+$/, ""), this.fenceId(lang), before.trim() ? "" : before);
+    let text = buildBlock(content.trimEnd(), this.fenceId(lang), before.trim() ? "" : before);
     if (before.trim()) text = "\n" + text;
     editor.replaceSelection(text + "\n");
   }

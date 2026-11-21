@@ -486,6 +486,18 @@ await check("pastePlain inserts the clipboard text", async () => {
   await p.pastePlain(editor);
   assert.equal(editor.replaced, "plain");
 });
+await check("placeholder scan stays fast without a closing >", () => {
+  const start = Date.now();
+  assert.deepEqual(findPlaceholders("echo <a" + "-a".repeat(5000)), []);
+  assert.deepEqual(findPlaceholders("echo <a-b c-d>"), ["<a-b c-d>"]);
+  assert.ok(Date.now() - start < 500);
+});
+await check("long blank input stays fast", () => {
+  const start = Date.now();
+  assert.deepEqual(findDangers("\n".repeat(50000)), []);
+  assert.equal(parseCommands("\n".repeat(50000) + "ls\n" + "\n".repeat(50000)).cmd, "ls");
+  assert.ok(Date.now() - start < 500);
+});
 
 const total = pass + failures.length;
 if (failures.length) {

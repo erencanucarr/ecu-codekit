@@ -275,6 +275,20 @@ for (const [name, text] of traces) {
   if (!good) fail++;
   console.log(`${good ? "ok  " : "FAIL"} ${pad(name, 32)} ${pad("plain*", 12)} ${got.map(fmt).join("  ")}`);
 }
-const total = corpus.length + traces.length;
-console.log(`\n${total - fail}/${total} passed (${corpus.length} inputs at normal, ${traces.length} stack traces at every sensitivity)`);
+const slow = [
+  ["function + spaces", "function" + " ".repeat(20000) + "x"],
+  ["import + tabs", "import" + "\t".repeat(20000) + "x"],
+  ["case + tabs", "case a" + "\t".repeat(20000) + "x"],
+  ["repeated ambiguous words", "kill ".repeat(10000)],
+];
+for (const [name, text] of slow) {
+  const start = Date.now();
+  detectLanguage(text, { minScore: 1 });
+  const ms = Date.now() - start;
+  const good = ms < 500;
+  if (!good) fail++;
+  console.log(`${good ? "ok  " : "FAIL"} ${pad(name, 32)} ${pad("fast", 12)} ${ms}ms`);
+}
+const total = corpus.length + traces.length + slow.length;
+console.log(`\n${total - fail}/${total} passed (${corpus.length} inputs at normal, ${traces.length} stack traces at every sensitivity, ${slow.length} slow-path inputs)`);
 process.exit(fail ? 1 : 0);
