@@ -444,38 +444,115 @@ const DEFAULT_FILE_EXTS =
   "sh, bash, zsh, go, py, yaml, yml, json, js, mjs, ts, tsx, sql, dockerfile, html, htm, xml, css, java, c, h, cpp, hpp, cs, rs, php, rb, ps1, toml, ini, cfg, conf, env, diff, patch, lua, mk, txt, log";
 
 const SHELL_CMDS = [
-  "sudo", "su", "dctl", "kubectl", "k9s", "helm", "docker", "podman", "crictl", "ctr", "nerdctl", "kubeadm", "k3s", "rke2", "minikube", "kind",
-  "rpm", "yum", "dnf", "apt", "apt-get", "apt-cache", "dpkg", "snap", "brew", "port", "zypper", "pacman", "apk",
-  "systemctl", "journalctl", "service", "chkconfig", "timedatectl", "hostnamectl", "localectl", "loginctl",
-  "ipmitool", "dstool", "ditool", "racadm", "dmidecode", "lshw", "lspci", "lsusb", "lscpu", "lsblk", "blkid", "fdisk", "parted", "mkfs", "mkfs.xfs", "mkfs.ext4",
-  "pvcreate", "pvs", "vgcreate", "vgs", "vgextend", "lvcreate", "lvs", "lvextend", "xfs_growfs", "resize2fs", "mount", "umount", "findmnt", "swapon", "swapoff",
-  "ssh", "scp", "sftp", "rsync", "ssh-keygen", "ssh-copy-id",
-  "cd", "ls", "ll", "pwd", "cat", "tac", "less", "more", "grep", "egrep", "fgrep", "rg", "ag", "awk", "gawk", "sed", "cut", "tr", "sort", "uniq", "wc", "tee", "xargs", "find", "locate",
-  "echo", "printf", "export", "unset", "source", "alias", "history", "which", "whereis", "type", "env", "set", "read", "sleep", "exit", "test", "time", "watch", "nohup", "screen", "tmux",
-  "chmod", "chown", "chgrp", "mkdir", "rmdir", "rm", "cp", "mv", "ln", "touch", "stat", "file", "du", "df", "free", "top", "htop", "ps", "pgrep", "pkill", "kill", "killall", "uptime", "uname", "whoami", "id", "groups",
-  "tar", "gzip", "gunzip", "zip", "unzip", "xz", "bzip2", "7z", "md5sum", "sha256sum", "base64",
-  "curl", "wget", "git", "gh", "make", "cmake", "go", "cargo", "npm", "npx", "yarn", "pnpm", "node", "pip", "pip3", "python", "python3", "java", "mvn", "gradle", "dotnet",
-  "vi", "vim", "nvim", "nano", "emacs", "code",
-  "ping", "traceroute", "tracepath", "mtr", "ip", "ifconfig", "route", "nmcli", "nmtui", "ethtool", "firewall-cmd", "iptables", "nft", "ufw", "ss", "netstat", "lsof", "nc", "ncat", "telnet", "dig", "nslookup", "host", "tcpdump", "arp", "arping",
-  "useradd", "adduser", "usermod", "userdel", "passwd", "chpasswd", "groupadd", "visudo", "crontab", "at",
-  "date", "reboot", "shutdown", "poweroff", "halt", "init", "dmesg", "sysctl", "modprobe", "lsmod", "insmod", "update-grub", "grub2-mkconfig", "dracut",
-  "openssl", "certbot", "keytool", "gpg",
-  "terraform", "ansible", "ansible-playbook", "packer", "vagrant", "virsh", "qemu-img", "aws", "az", "gcloud", "oc", "istioctl", "argocd", "velero", "etcdctl", "calicoctl", "cilium",
+  "sudo", "dctl", "kubectl", "k9s", "helm", "docker", "podman", "crictl", "ctr", "nerdctl", "kubeadm", "k3s", "rke2", "minikube", "kubectx", "kubens", "kustomize", "kubeseal", "skaffold", "eksctl", "doctl", "flyctl",
+  "dnf", "apt-get", "apt-cache", "dpkg", "brew", "zypper", "launchctl", "diskutil", "pbcopy", "pbpaste", "sw_vers", "softwareupdate", "xcode-select", "xcrun", "mdfind", "caffeinate", "scutil", "networksetup", "osascript", "plutil", "codesign", "hdiutil",
+  "systemctl", "journalctl", "chkconfig", "timedatectl", "hostnamectl", "localectl", "loginctl", "systemd-analyze", "systemd-run", "coredumpctl", "networkctl", "resolvectl", "udevadm",
+  "ipmitool", "dstool", "ditool", "racadm", "dmidecode", "lshw", "lspci", "lsusb", "lscpu", "lsblk", "blkid", "fdisk", "parted", "mkfs", "mkfs.xfs", "mkfs.ext4", "mkswap", "wipefs", "sgdisk", "e2fsck", "fsck", "xfs_repair", "tune2fs", "smartctl", "hdparm", "mdadm", "cryptsetup", "zpool", "zfs", "btrfs",
+  "pvcreate", "pvs", "vgcreate", "vgs", "vgextend", "lvcreate", "lvs", "lvextend", "xfs_growfs", "resize2fs", "umount", "findmnt", "swapon", "swapoff",
+  "ssh", "scp", "sftp", "rsync", "ssh-keygen", "ssh-copy-id", "ssh-add", "ssh-agent", "sshpass", "mosh", "socat",
+  "ls", "ll", "pwd", "tac", "grep", "egrep", "fgrep", "rg", "ag", "awk", "gawk", "sed", "uniq", "tee", "xargs", "jq", "yq", "fzf", "fd", "eza", "exa", "ncdu", "xxd", "hexdump", "seq", "shuf", "basename", "dirname", "realpath", "readlink", "mktemp", "dd", "shred",
+  "echo", "printf", "unset", "whereis", "nohup", "tmux", "ulimit",
+  "chmod", "chown", "chgrp", "mkdir", "rmdir", "rm", "cp", "mv", "ln", "du", "df", "htop", "btop", "pgrep", "pkill", "killall", "uname", "whoami", "lsof", "strace", "ltrace", "vmstat", "iostat", "mpstat", "pidstat", "nproc", "dmesg", "sysctl", "modprobe", "lsmod", "insmod",
+  "tar", "gzip", "gunzip", "unzip", "xz", "bzip2", "7z", "md5sum", "sha1sum", "sha256sum", "shasum", "base64",
+  "wget", "git", "gh", "cmake", "npm", "npx", "pnpm", "pip", "pip3", "pipx", "python3", "mvn", "gradle", "dotnet", "deno", "rustup", "rustc", "tsc", "pytest", "conda", "pyenv", "nvm", "direnv", "asdf", "ffmpeg", "ffprobe", "pandoc", "sqlite3", "yt-dlp",
+  "vi", "vim", "nvim", "emacs",
+  "traceroute", "tracepath", "mtr", "ifconfig", "nmcli", "nmtui", "ethtool", "firewall-cmd", "iptables", "nft", "ufw", "netstat", "nc", "ncat", "nslookup", "tcpdump", "tshark", "arping", "nmap", "iperf3", "iftop", "whois", "tailscale",
+  "useradd", "adduser", "usermod", "userdel", "passwd", "chpasswd", "groupadd", "visudo", "crontab",
+  "poweroff", "update-grub", "grub2-mkconfig", "dracut", "sestatus", "getenforce", "setenforce", "restorecon", "semanage", "getfacl", "setfacl", "chattr", "lsattr", "nsenter",
+  "openssl", "certbot", "keytool", "gpg", "mkcert",
+  "terraform", "ansible", "ansible-playbook", "packer", "virsh", "qemu-img", "aws", "gcloud", "gsutil", "istioctl", "argocd", "velero", "etcdctl", "calicoctl", "cilium", "pulumi", "sops",
   "psql", "pg_dump", "pg_restore", "pg_basebackup", "pgbackrest", "patronictl", "mysql", "mysqldump", "redis-cli", "mongosh", "mongo",
   "zabbix_server", "zabbix_agentd", "zabbix_get", "zabbix_sender", "chronyc", "ntpq", "ntpdate",
-  "bash", "sh", "zsh", "exec", "eval", "trap", "wait", "jobs", "fg", "bg", "disown",
+  "sh", "zsh", "exec", "fg", "bg",
 ];
+const SHELL_AMBIG = [
+  "su", "k", "oc", "az", "kind", "apt", "yum", "apk", "snap", "port", "rpm", "pacman", "service", "defaults", "mount", "cd", "cat", "less", "more", "cut", "tr", "sort", "wc", "find", "locate", "head", "tail", "diff", "tree", "bat",
+  "export", "source", "alias", "history", "which", "type", "env", "set", "read", "sleep", "exit", "test", "time", "watch", "screen", "wait", "jobs", "trap", "eval", "disown",
+  "touch", "stat", "file", "free", "top", "ps", "ss", "kill", "uptime", "id", "groups", "zip", "curl", "make", "go", "cargo", "yarn", "node", "python", "java", "bash", "poetry", "bun", "uv", "stern",
+  "nano", "code", "open", "man", "ping", "ip", "route", "dig", "host", "at", "date", "reboot", "shutdown", "halt", "init",
+];
+const KUBE_VERBS = /^(get|describe|apply|logs|exec|delete|edit|rollout|port-forward|config|scale|create|patch|label|annotate|drain|cordon|uncordon|top|run|expose|explain|api-resources|login|project|new-app|whoami|adm)\b/;
+const SHELL_ARGS = {
+  k: KUBE_VERBS,
+  oc: KUBE_VERBS,
+  az: /^(login|logout|account|group|vm|aks|acr|storage|webapp|network|keyvault|ad|role|deployment|extension|resource|functionapp|monitor|sql|cosmosdb)\b/,
+  kind: /^(create|delete|get|load|export|build)\s+(cluster|clusters|nodes|kubeconfig|docker-image|image-archive|logs|node-image)\b/,
+  apt: /^(install|update|upgrade|remove|purge|search|show|list|autoremove|full-upgrade|dist-upgrade|policy)\b/,
+  yum: /^(install|update|upgrade|remove|erase|search|info|list|makecache|clean|repolist|groupinstall|check-update)\b/,
+  apk: /^(add|del|update|upgrade|search|info|cache)\b/,
+  snap: /^(install|remove|refresh|list|info|find|run|services|start|stop|restart)\b/,
+  ps: /^(aux|ax|axu|auxf|ef|eo)\b/,
+  service: /^\S+\s+(start|stop|restart|status|reload|force-reload)\s*$/,
+  defaults: /^(read|write|delete|domains|export|import|find|read-type)\b/,
+  export: /^[A-Z_][A-Z0-9_]*\s*$/,
+  make: /^(all|install|build|test|tests|clean|run|dev|lint|check|release|deploy|docs|fmt|format|setup|deps|bootstrap|up|down|start|stop|serve|dist|package|image|push|generate|gen|proto|migrate|ci|e2e|bench|coverage|vet|tidy|help|uninstall|distclean|config|menuconfig|modules|debug)(\s+[\w.-]+)?\s*$/,
+  go: /^(build|run|test|mod|get|install|vet|fmt|generate|version|env|work|tool|clean|doc|list)\b/,
+  cargo: /^(build|run|test|check|add|install|new|init|fmt|clippy|update|publish|doc|bench|clean|tree|remove|search|watch)\b/,
+  yarn: /^(install|add|remove|run|build|dev|start|test|upgrade|global|why|workspace|workspaces|dlx|create|init|lint|set|config)\b/,
+  poetry: /^(install|add|run|shell|lock|update|build|publish|init|new|env|show|remove|export|check|version|self|config)\b/,
+  bun: /^(install|add|run|x|create|test|build|dev|init|remove|upgrade|pm|link|outdated|update)\b/,
+  uv: /^(pip|run|sync|add|venv|lock|tool|init|python|remove|build|publish|tree|export|cache|self|version)\b/,
+  ip: /^(a|addr|address|r|route|link|l|neigh|n|rule|netns|maddr|monitor|tunnel|xfrm)\b/,
+  su: /^(-|root)(\s|$)/,
+};
+const SHELL_BARE = new Set(["ls", "ll", "pwd", "htop", "btop", "whoami", "dmesg", "ifconfig", "lsblk", "lscpu", "lsusb", "lspci", "nproc", "k9s", "ncdu", "netstat"]);
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const SHELL_LINE_RE = new RegExp(
-  "^(?:\\[[^\\]]+\\][$#]\\s*|[\\w.-]+@[\\w.-]+(?::[^$#\\s]*)?\\s?[$#]\\s*|\\$\\s+|#\\s+(?=sudo\\s))?(?:sudo\\s+(?:-\\S+\\s+)*)?(?:" + SHELL_CMDS.map(escRe).join("|") + ")(?=\\s|$|;|\\|)(?!\\s*[=:](?!=))"
-);
+const SHELL_PREFIX = "(?:\\[[^\\]]+\\][$#]\\s*|[\\w.-]+@[\\w.-]+(?::[^$#\\s]*)?\\s?[$#]\\s*|\\$\\s+|#\\s+(?=sudo\\s))?(?:sudo\\s+(?:-\\S+\\s+)*)?";
+const shellAlt = (list) => "(" + list.map(escRe).join("|") + ")(?=\\s|$|;|\\|)(?!\\s*[=:](?!=))";
+const SHELL_LINE_RE = new RegExp("^" + SHELL_PREFIX + shellAlt(SHELL_CMDS));
+const SHELL_AMBIG_RE = new RegExp("^(" + SHELL_PREFIX + ")" + shellAlt(SHELL_AMBIG) + "(.*)$");
 const SHELL_LINE_EXTRA = [
   /^\.{1,2}\/[\w.\-\/]+/,
   /^~?\/[\w.\-\/]+\.(sh|py)\b/,
   /^(export\s+)?[A-Z_][A-Z0-9_]*=\S*(\s|$)/,
-  /^(if|then|else|elif|fi|for|while|until|do|done|case|esac|function)\b/,
+  /^(if\s+(\[|!\s|test\s|command\s|grep\s|\w+\s+-)|then\s*$|else\s*$|elif\s|fi\s*$|for\s+\w+\s+in\s|for\s*\(\(|while\s+(\[|read\b|true\b|:|!)|until\s+(\[|!)|do\s*$|done\b(?!\s+\w)|case\s+\S+\s+in\s*$|esac\s*$|function\s+[\w-]+\s*(\(\)\s*)?\{?\s*$)/,
+  /;\s*(then|do)\s*$/,
   /^[\w-]+\s*\(\)\s*\{?\s*$/,
 ];
+const SHELL_EXTS = "txt|log|md|json|ya?ml|sh|py|js|ts|go|rs|rb|conf|cfg|ini|env|csv|xml|html?|css|tar|gz|tgz|zip|pub|pem|key|crt|sql|bin|iso|img|deb|rpm|toml|lock|out|pdf|png|jpe?g|dmg|pkg|plist|com|net|org|io";
+const SHELL_SIGNAL_RE = new RegExp(
+  "(?:^|\\s)--?[a-zA-Z]|[|<>$=~;`*\\/]|&&|(?:^|[\\s=(])[\"']|[\"'](?:$|[\\s;|)])|(?:^|\\s)\\+\\S|(?:^|\\s)\\.{1,2}(?:\\s|$)|\\b[\\w-]+\\.(?:" + SHELL_EXTS + ")\\b"
+);
+const STACK_FRAME_RE = /^\s*at\s+[\w$.<>\/]+\(.*(:\d+)?\)/;
+const PROSE_STOP = new Set(
+  ("the a an to of with at on is are was were be been my your our their his her it its this that these those and or but before after until me we you they " +
+    "will would should could can so very too some about from into when what how why not just also than there here have has had by today tomorrow " +
+    "ve bir bu için ile ama gibi çok daha sonra önce ben sen biz siz onlar de da mi mı mu mü ki ya veya hem her hiç kadar olarak yarın bugün dün").split(" ")
+);
+function proseLine(t) {
+  if (SHELL_SIGNAL_RE.test(t)) return false;
+  const w = t.split(/\s+/);
+  if (w.length < 4) return false;
+  const letters = w.filter((x) => /^\p{L}[\p{L}'’-]*[.,!?:…]*$/u.test(x)).length;
+  if (letters / w.length < 0.75) return false;
+  return /[.!?…]$|,\s/.test(t) || w.some((x) => PROSE_STOP.has(x.toLowerCase().replace(/[.,!?:…]+$/, "")));
+}
+function shellLine(t) {
+  if (STACK_FRAME_RE.test(t)) return 0;
+  if (SHELL_LINE_RE.test(t) || SHELL_LINE_EXTRA.some((re) => re.test(t))) return proseLine(t) ? 0 : 2;
+  const m = SHELL_AMBIG_RE.exec(t);
+  if (!m) return 0;
+  const cmd = m[2];
+  const arg = m[3].trim();
+  if (m[1] || (cmd === "cd" && !/\s/.test(arg))) return 2;
+  if ((SHELL_ARGS[cmd] && SHELL_ARGS[cmd].test(arg)) || (arg && shellLine(arg) === 2)) return 2;
+  if (SHELL_SIGNAL_RE.test(m[3]) || /\d/.test(m[3])) return proseLine(t) ? 0 : 2;
+  return arg.split(/\s+/).length <= 1 ? 1 : 0;
+}
+const STACK_RE = [
+  /^\s*Exception in thread "/m,
+  /^\s*Caused by: [\w$.]+/m,
+  /^\s*Traceback \(most recent call last\):/m,
+  /^goroutine \d+ \[/m,
+  /^\s*at\s+[\w$.<>`\[\],]+\(.*\)\s+in\s+.+:line\s+\d+/m,
+];
+const FRAME_RE = /^\s*at\s+(?:async\s+)?(?:new\s+)?[\w$.<>\[\]\/]+(?:\s+\[as [^\]]+\])?\s*\((?:[^()]*\.\w+:\d+(?::\d+)?|node:[\w\/]+:\d+(?::\d+)?|Native Method|Unknown Source)\)\s*$|^\s*at\s+(?:file:\/\/)?[\/\w.-]+\.\w+:\d+:\d+\s*$/;
+function isStackTrace(lines, text) {
+  if (STACK_RE.some((re) => re.test(text))) return true;
+  if (/^panic: /m.test(text) && /\.go:\d+/.test(text)) return true;
+  const frames = lines.filter((l) => FRAME_RE.test(l)).length;
+  return frames >= 2 || (frames >= 1 && /\b\w*(Error|Exception)\b/.test(text));
+}
 
 const JS_TS = ["javascript", "typescript"];
 const C_CPP = ["c", "cpp"];
@@ -614,6 +691,7 @@ function detectLanguage(raw, opts) {
   const first = nonEmpty[0].trim();
   const single = nonEmpty.length === 1;
   const hard = (lang) => ({ lang, score: 100, second: 0, confident: true });
+  if (isStackTrace(nonEmpty, text)) return null;
 
   if (/^#!.*\b(ba|z|k|da)?sh\b/.test(first)) return hard("bash");
   if (/^#!.*\bpython/.test(first)) return hard("python");
@@ -626,13 +704,18 @@ function detectLanguage(raw, opts) {
       JSON.parse(text);
       return hard("json");
     } catch (e) {
+      try {
+        JSON.parse(text.replace(/,(\s*[}\]])/g, "$1"));
+        return hard("json");
+      } catch (e2) {
+      }
     }
   }
   if (/^(diff --git|--- \S|\+\+\+ \S|Index: )/m.test(text) && /^@@ .* @@/m.test(text)) return hard("diff");
 
   if (single) {
     if (/^(https?|ftp|file|obsidian):\/\/\S+$/.test(first)) return null;
-    if (!/\s/.test(first) && !/[(){};=<>$|]/.test(first) && !/^\.{1,2}\/[\w.\-\/]+$/.test(first)) return null;
+    if (!/\s/.test(first) && !/[(){};=<>$|]/.test(first) && !/^\.{1,2}\/[\w.\-\/]+$/.test(first) && !SHELL_BARE.has(first)) return null;
   }
 
   const S = Object.create(null);
@@ -644,14 +727,19 @@ function detectLanguage(raw, opts) {
     if (m && m.length) for (const l of r.langs) add(l, Math.min(m.length, r.cap) * r.w);
   }
 
-  let counted = 0, shell = 0, yamlL = 0, yamlProse = 0, iniL = 0, tomlL = 0, prose = 0, md = 0;
+  const ENV_LINE = /^[A-Z_][A-Z0-9_]*=(?:"[^"]*"|'[^']*'|[^\s"']*)\s*$/;
+  const code = nonEmpty.map((l) => l.trim()).filter((t) => !/^(#|\/\/|--|;)/.test(t));
+  const envOnly = code.length >= 2 && code.every((t) => ENV_LINE.test(t));
+  let counted = 0, shell = 0, loose = 0, yamlL = 0, yamlProse = 0, iniL = 0, tomlL = 0, prose = 0, md = 0;
   for (const l of nonEmpty) {
     const t = l.trim();
     if (/^#{1,6}\s+\S/.test(t) && /^#{1,6}\s+[A-ZÇĞİÖŞÜa-zçğıöşü]/.test(t) && t.split(/\s+/).length >= 3 && !/[=$|;]/.test(t)) md += 1;
     if (/^(#|\/\/|--|;)/.test(t)) continue;
     counted++;
-    const isShell = SHELL_LINE_RE.test(t) || SHELL_LINE_EXTRA.some((re) => re.test(t));
+    const sh = envOnly ? 0 : shellLine(t);
+    const isShell = sh === 2;
     if (isShell) shell++;
+    else if (sh === 1) loose++;
     const ym = /^(- )?["']?[\w.\-\/@$]+["']?:(\s+(.*))?$/.exec(t);
     if (ym || /^- \S/.test(t) || t === "---") {
       yamlL++;
@@ -669,9 +757,12 @@ function detectLanguage(raw, opts) {
     if (/^([-*+]|\d+\.)\s+(\[[ xX]\]\s+)?[^\s:]+\s+\S+\s+\S+/.test(t) && !/[;{}=$|]/.test(t)) md += 1;
     if (/\[[^\]]+\]\((https?:|\.?\/|#)[^)]*\)|\[\[[^\]]+\]\]|\*\*[^*\s][^*]*\*\*|^>\s+\S/.test(t)) md += 2;
     if (/^\|.*\|$/.test(t)) md += 1;
+    if (/^[-*+] [A-ZÇĞİÖŞÜ][^:]{0,30}:\s+\S/.test(l) && !/[;{}=$|]/.test(t)) md += 1;
   }
   if (!counted) return null;
 
+  if (shell) shell += loose;
+  if (envOnly) add("ini", Math.min(counted * 3, 18));
   if (shell) {
     add("bash", shell * 4);
     if (shell / counted >= 0.6) add("bash", 4);
